@@ -1,0 +1,11 @@
+Digital to Wave Testbench
+Copyright (C) 2026 Jean-François Brisson / Spark AI NLP
+Licensed under the GNU Affero General Public License v3.0 only (AGPL-3.0-only); see LICENSE.
+
+The encoder implements the signed-amplitude sine expression printed on p. 12 of
+Lee, Mun Seok (2026), "Digital to Wave: Paradigm Shift in Quantum Wave-Based Computing
+and Lab-Grown Diamond Memory", Zenodo preprint, https://doi.org/10.5281/zenodo.21947036
+(concept DOI 10.5281/zenodo.21464222), distributed by its author under CC BY 4.0.
+No text, figures or other material from that preprint are redistributed here; it is cited
+as the source of the equation only. The preprint's author has not reviewed or endorsed
+this software.

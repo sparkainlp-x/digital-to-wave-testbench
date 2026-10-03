@@ -1,0 +1,600 @@
+{
+  "diagnostic": "v5_clean_timing_carrier_phase_rotation",
+  "evidence_status": "SYNTHETIC; clean frames only; diagnostic, not part of the hash-locked v5 protocol",
+  "carrier_rotation_deg_per_sample": 22.5,
+  "fixed_vectors": [
+    "mixed_signs",
+    "sparse_and_zeros",
+    "boundary_values",
+    "randomized_1",
+    "randomized_2",
+    "randomized_3"
+  ],
+  "rows": [
+    {
+      "timing_offset_samples": -32,
+      "carrier_rotation_deg": -720.0,
+      "measured_own_symbol_gain": 0.5806716604,
+      "phase_only_predicted_gain": 0.5,
+      "abs_gain_gap": 0.0806716604,
+      "clean_mae_nominal": 0.5275691164,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -31,
+      "carrier_rotation_deg": -697.5,
+      "measured_own_symbol_gain": 0.5435625016,
+      "phase_only_predicted_gain": 0.476375384,
+      "abs_gain_gap": 0.0671871177,
+      "clean_mae_nominal": 0.520846575,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -30,
+      "carrier_rotation_deg": -675.0,
+      "measured_own_symbol_gain": 0.4198628035,
+      "phase_only_predicted_gain": 0.3756504775,
+      "abs_gain_gap": 0.044212326,
+      "clean_mae_nominal": 0.5909085932,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -29,
+      "carrier_rotation_deg": -652.5,
+      "measured_own_symbol_gain": 0.2251509602,
+      "phase_only_predicted_gain": 0.2092800021,
+      "abs_gain_gap": 0.0158709581,
+      "clean_mae_nominal": 0.7561397042,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -28,
+      "carrier_rotation_deg": -630.0,
+      "measured_own_symbol_gain": -0.0131040106,
+      "phase_only_predicted_gain": -0.0,
+      "abs_gain_gap": 0.0131040106,
+      "clean_mae_nominal": 0.9889995404,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -27,
+      "carrier_rotation_deg": -607.5,
+      "measured_own_symbol_gain": -0.2593933901,
+      "phase_only_predicted_gain": -0.2212388593,
+      "abs_gain_gap": 0.0381545307,
+      "clean_mae_nominal": 1.2508633387,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -26,
+      "carrier_rotation_deg": -585.0,
+      "measured_own_symbol_gain": -0.4754584121,
+      "phase_only_predicted_gain": -0.4198446513,
+      "abs_gain_gap": 0.0556137608,
+      "clean_mae_nominal": 1.4816022761,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -25,
+      "carrier_rotation_deg": -562.5,
+      "measured_own_symbol_gain": -0.6262310403,
+      "phase_only_predicted_gain": -0.5629890901,
+      "abs_gain_gap": 0.0632419502,
+      "clean_mae_nominal": 1.6408355618,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -24,
+      "carrier_rotation_deg": -540.0,
+      "measured_own_symbol_gain": -0.6855037453,
+      "phase_only_predicted_gain": -0.625,
+      "abs_gain_gap": 0.0605037453,
+      "clean_mae_nominal": 1.7017506921,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -23,
+      "carrier_rotation_deg": -517.5,
+      "measured_own_symbol_gain": -0.6404147192,
+      "phase_only_predicted_gain": -0.5918603255,
+      "abs_gain_gap": 0.0485543937,
+      "clean_mae_nominal": 1.6520415673,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -22,
+      "carrier_rotation_deg": -495.0,
+      "measured_own_symbol_gain": -0.4939902816,
+      "phase_only_predicted_gain": -0.4640388252,
+      "abs_gain_gap": 0.0299514565,
+      "clean_mae_nominal": 1.4962436279,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -21,
+      "carrier_rotation_deg": -472.5,
+      "measured_own_symbol_gain": -0.2652684622,
+      "phase_only_predicted_gain": -0.2571154311,
+      "abs_gain_gap": 0.0081530311,
+      "clean_mae_nominal": 1.2555608196,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -20,
+      "carrier_rotation_deg": -450.0,
+      "measured_own_symbol_gain": 0.0131040106,
+      "phase_only_predicted_gain": 0.0,
+      "abs_gain_gap": 0.0131040106,
+      "clean_mae_nominal": 0.9661356859,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -19,
+      "carrier_rotation_deg": -427.5,
+      "measured_own_symbol_gain": 0.2995108922,
+      "phase_only_predicted_gain": 0.2690742884,
+      "abs_gain_gap": 0.0304366038,
+      "clean_mae_nominal": 0.6822712913,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -18,
+      "carrier_rotation_deg": -405.0,
+      "measured_own_symbol_gain": 0.5495858902,
+      "phase_only_predicted_gain": 0.508232999,
+      "abs_gain_gap": 0.0413528912,
+      "clean_mae_nominal": 0.4459843578,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -17,
+      "carrier_rotation_deg": -382.5,
+      "measured_own_symbol_gain": 0.7230832579,
+      "phase_only_predicted_gain": 0.6784740317,
+      "abs_gain_gap": 0.0446092262,
+      "clean_mae_nominal": 0.3017204544,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -16,
+      "carrier_rotation_deg": -360.0,
+      "measured_own_symbol_gain": 0.7903358302,
+      "phase_only_predicted_gain": 0.75,
+      "abs_gain_gap": 0.0403358302,
+      "clean_mae_nominal": 0.2637845582,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -15,
+      "carrier_rotation_deg": -337.5,
+      "measured_own_symbol_gain": 0.7372669368,
+      "phase_only_predicted_gain": 0.7073452671,
+      "abs_gain_gap": 0.0299216697,
+      "clean_mae_nominal": 0.2845724692,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -14,
+      "carrier_rotation_deg": -315.0,
+      "measured_own_symbol_gain": 0.5681177597,
+      "phase_only_predicted_gain": 0.5524271728,
+      "abs_gain_gap": 0.0156905869,
+      "clean_mae_nominal": 0.4259461806,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -13,
+      "carrier_rotation_deg": -292.5,
+      "measured_own_symbol_gain": 0.3053859643,
+      "phase_only_predicted_gain": 0.3049508602,
+      "abs_gain_gap": 0.0004351041,
+      "clean_mae_nominal": 0.6764657079,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -12,
+      "carrier_rotation_deg": -270.0,
+      "measured_own_symbol_gain": -0.0131040106,
+      "phase_only_predicted_gain": -0.0,
+      "abs_gain_gap": 0.0131040106,
+      "clean_mae_nominal": 0.9889995404,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -11,
+      "carrier_rotation_deg": -247.5,
+      "measured_own_symbol_gain": -0.3396283942,
+      "phase_only_predicted_gain": -0.3169097174,
+      "abs_gain_gap": 0.0227186768,
+      "clean_mae_nominal": 1.315595456,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -10,
+      "carrier_rotation_deg": -225.0,
+      "measured_own_symbol_gain": -0.6237133683,
+      "phase_only_predicted_gain": -0.5966213466,
+      "abs_gain_gap": 0.0270920217,
+      "clean_mae_nominal": 1.5997064667,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -9,
+      "carrier_rotation_deg": -202.5,
+      "measured_own_symbol_gain": -0.8199354755,
+      "phase_only_predicted_gain": -0.7939589733,
+      "abs_gain_gap": 0.0259765022,
+      "clean_mae_nominal": 1.7947631788,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -8,
+      "carrier_rotation_deg": -180.0,
+      "measured_own_symbol_gain": -0.8951679151,
+      "phase_only_predicted_gain": -0.875,
+      "abs_gain_gap": 0.0201679151,
+      "clean_mae_nominal": 1.8683780504,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -7,
+      "carrier_rotation_deg": -157.5,
+      "measured_own_symbol_gain": -0.8341191544,
+      "phase_only_predicted_gain": -0.8228302086,
+      "abs_gain_gap": 0.0112889457,
+      "clean_mae_nominal": 1.8062726741,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -6,
+      "carrier_rotation_deg": -135.0,
+      "measured_own_symbol_gain": -0.6422452378,
+      "phase_only_predicted_gain": -0.6408155205,
+      "abs_gain_gap": 0.0014297174,
+      "clean_mae_nominal": 1.614766267,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -5,
+      "carrier_rotation_deg": -112.5,
+      "measured_own_symbol_gain": -0.3455034664,
+      "phase_only_predicted_gain": -0.3527862892,
+      "abs_gain_gap": 0.0072828228,
+      "clean_mae_nominal": 1.3203697942,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -4,
+      "carrier_rotation_deg": -90.0,
+      "measured_own_symbol_gain": 0.0131040106,
+      "phase_only_predicted_gain": 0.0,
+      "abs_gain_gap": 0.0131040106,
+      "clean_mae_nominal": 0.9661356859,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -3,
+      "carrier_rotation_deg": -67.5,
+      "measured_own_symbol_gain": 0.3797458963,
+      "phase_only_predicted_gain": 0.3647451465,
+      "abs_gain_gap": 0.0150007498,
+      "clean_mae_nominal": 0.6057153479,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -2,
+      "carrier_rotation_deg": -45.0,
+      "measured_own_symbol_gain": 0.6978408464,
+      "phase_only_predicted_gain": 0.6850096943,
+      "abs_gain_gap": 0.0128311521,
+      "clean_mae_nominal": 0.2947394935,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": -1,
+      "carrier_rotation_deg": -22.5,
+      "measured_own_symbol_gain": 0.9167876931,
+      "phase_only_predicted_gain": 0.9094439148,
+      "abs_gain_gap": 0.0073437783,
+      "clean_mae_nominal": 0.0810581432,
+      "clean_frames_passing_nominal": 6
+    },
+    {
+      "timing_offset_samples": 0,
+      "carrier_rotation_deg": 0.0,
+      "measured_own_symbol_gain": 1.0,
+      "phase_only_predicted_gain": 1.0,
+      "abs_gain_gap": 0.0,
+      "clean_mae_nominal": 0.0,
+      "clean_frames_passing_nominal": 6
+    },
+    {
+      "timing_offset_samples": 1,
+      "carrier_rotation_deg": 22.5,
+      "measured_own_symbol_gain": 0.9167876931,
+      "phase_only_predicted_gain": 0.9094439148,
+      "abs_gain_gap": 0.0073437783,
+      "clean_mae_nominal": 0.0814934571,
+      "clean_frames_passing_nominal": 6
+    },
+    {
+      "timing_offset_samples": 2,
+      "carrier_rotation_deg": 45.0,
+      "measured_own_symbol_gain": 0.6978408464,
+      "phase_only_predicted_gain": 0.6850096943,
+      "abs_gain_gap": 0.0128311521,
+      "clean_mae_nominal": 0.2953073559,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 3,
+      "carrier_rotation_deg": 67.5,
+      "measured_own_symbol_gain": 0.3797458963,
+      "phase_only_predicted_gain": 0.3647451465,
+      "abs_gain_gap": 0.0150007498,
+      "clean_mae_nominal": 0.6058925583,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 4,
+      "carrier_rotation_deg": 90.0,
+      "measured_own_symbol_gain": 0.0131040106,
+      "phase_only_predicted_gain": 0.0,
+      "abs_gain_gap": 0.0131040106,
+      "clean_mae_nominal": 0.9652637905,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 5,
+      "carrier_rotation_deg": 112.5,
+      "measured_own_symbol_gain": -0.3455034664,
+      "phase_only_predicted_gain": -0.3527862892,
+      "abs_gain_gap": 0.0072828228,
+      "clean_mae_nominal": 1.3178959683,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 6,
+      "carrier_rotation_deg": 135.0,
+      "measured_own_symbol_gain": -0.6422452378,
+      "phase_only_predicted_gain": -0.6408155205,
+      "abs_gain_gap": 0.0014297174,
+      "clean_mae_nominal": 1.6106174146,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 7,
+      "carrier_rotation_deg": 157.5,
+      "measured_own_symbol_gain": -0.8341191544,
+      "phase_only_predicted_gain": -0.8228302086,
+      "abs_gain_gap": 0.0112889457,
+      "clean_mae_nominal": 1.8007389372,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 8,
+      "carrier_rotation_deg": 180.0,
+      "measured_own_symbol_gain": -0.8951679151,
+      "phase_only_predicted_gain": -0.875,
+      "abs_gain_gap": 0.0201679151,
+      "clean_mae_nominal": 1.8620321202,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 9,
+      "carrier_rotation_deg": 202.5,
+      "measured_own_symbol_gain": -0.8199354755,
+      "phase_only_predicted_gain": -0.7939589733,
+      "abs_gain_gap": 0.0259765022,
+      "clean_mae_nominal": 1.7884822641,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 10,
+      "carrier_rotation_deg": 225.0,
+      "measured_own_symbol_gain": -0.6237133683,
+      "phase_only_predicted_gain": -0.5966213466,
+      "abs_gain_gap": 0.0270920217,
+      "clean_mae_nominal": 1.5946032994,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 11,
+      "carrier_rotation_deg": 247.5,
+      "measured_own_symbol_gain": -0.3396283942,
+      "phase_only_predicted_gain": -0.3169097174,
+      "abs_gain_gap": 0.0227186768,
+      "clean_mae_nominal": 1.3127307232,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 12,
+      "carrier_rotation_deg": 270.0,
+      "measured_own_symbol_gain": -0.0131040106,
+      "phase_only_predicted_gain": -0.0,
+      "abs_gain_gap": 0.0131040106,
+      "clean_mae_nominal": 0.9897900556,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 13,
+      "carrier_rotation_deg": 292.5,
+      "measured_own_symbol_gain": 0.3053859643,
+      "phase_only_predicted_gain": 0.3049508602,
+      "abs_gain_gap": 0.0004351041,
+      "clean_mae_nominal": 0.68216592,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 14,
+      "carrier_rotation_deg": 315.0,
+      "measured_own_symbol_gain": 0.5681177597,
+      "phase_only_predicted_gain": 0.5524271728,
+      "abs_gain_gap": 0.0156905869,
+      "clean_mae_nominal": 0.4380521587,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 15,
+      "carrier_rotation_deg": 337.5,
+      "measured_own_symbol_gain": 0.7372669368,
+      "phase_only_predicted_gain": 0.7073452671,
+      "abs_gain_gap": 0.0299216697,
+      "clean_mae_nominal": 0.2914381307,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 16,
+      "carrier_rotation_deg": 360.0,
+      "measured_own_symbol_gain": 0.7903358302,
+      "phase_only_predicted_gain": 0.75,
+      "abs_gain_gap": 0.0403358302,
+      "clean_mae_nominal": 0.2619694687,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 17,
+      "carrier_rotation_deg": 382.5,
+      "measured_own_symbol_gain": 0.7230832579,
+      "phase_only_predicted_gain": 0.6784740317,
+      "abs_gain_gap": 0.0446092262,
+      "clean_mae_nominal": 0.3088133806,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 18,
+      "carrier_rotation_deg": 405.0,
+      "measured_own_symbol_gain": 0.5495858902,
+      "phase_only_predicted_gain": 0.508232999,
+      "abs_gain_gap": 0.0413528912,
+      "clean_mae_nominal": 0.4593644279,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 19,
+      "carrier_rotation_deg": 427.5,
+      "measured_own_symbol_gain": 0.2995108922,
+      "phase_only_predicted_gain": 0.2690742884,
+      "abs_gain_gap": 0.0304366038,
+      "clean_mae_nominal": 0.6885127406,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 20,
+      "carrier_rotation_deg": 450.0,
+      "measured_own_symbol_gain": 0.0131040106,
+      "phase_only_predicted_gain": 0.0,
+      "abs_gain_gap": 0.0131040106,
+      "clean_mae_nominal": 0.9652637905,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 21,
+      "carrier_rotation_deg": 472.5,
+      "measured_own_symbol_gain": -0.2652684622,
+      "phase_only_predicted_gain": -0.2571154311,
+      "abs_gain_gap": 0.0081530311,
+      "clean_mae_nominal": 1.2484659126,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 22,
+      "carrier_rotation_deg": 495.0,
+      "measured_own_symbol_gain": -0.4939902816,
+      "phase_only_predicted_gain": -0.4640388252,
+      "abs_gain_gap": 0.0299514565,
+      "clean_mae_nominal": 1.4844733634,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 23,
+      "carrier_rotation_deg": 517.5,
+      "measured_own_symbol_gain": -0.6404147192,
+      "phase_only_predicted_gain": -0.5918603255,
+      "abs_gain_gap": 0.0485543937,
+      "clean_mae_nominal": 1.6377372587,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 24,
+      "carrier_rotation_deg": 540.0,
+      "measured_own_symbol_gain": -0.6855037453,
+      "phase_only_predicted_gain": -0.625,
+      "abs_gain_gap": 0.0605037453,
+      "clean_mae_nominal": 1.6864045827,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 25,
+      "carrier_rotation_deg": 562.5,
+      "measured_own_symbol_gain": -0.6262310403,
+      "phase_only_predicted_gain": -0.5629890901,
+      "abs_gain_gap": 0.0632419502,
+      "clean_mae_nominal": 1.6261906627,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 26,
+      "carrier_rotation_deg": 585.0,
+      "measured_own_symbol_gain": -0.4754584121,
+      "phase_only_predicted_gain": -0.4198446513,
+      "abs_gain_gap": 0.0556137608,
+      "clean_mae_nominal": 1.4693870086,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 27,
+      "carrier_rotation_deg": 607.5,
+      "measured_own_symbol_gain": -0.2593933901,
+      "phase_only_predicted_gain": -0.2212388593,
+      "abs_gain_gap": 0.0381545307,
+      "clean_mae_nominal": 1.2433890323,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 28,
+      "carrier_rotation_deg": 630.0,
+      "measured_own_symbol_gain": -0.0131040106,
+      "phase_only_predicted_gain": -0.0,
+      "abs_gain_gap": 0.0131040106,
+      "clean_mae_nominal": 0.9897900556,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 29,
+      "carrier_rotation_deg": 652.5,
+      "measured_own_symbol_gain": 0.2251509602,
+      "phase_only_predicted_gain": 0.2092800021,
+      "abs_gain_gap": 0.0158709581,
+      "clean_mae_nominal": 0.7693890374,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 30,
+      "carrier_rotation_deg": 675.0,
+      "measured_own_symbol_gain": 0.4198628035,
+      "phase_only_predicted_gain": 0.3756504775,
+      "abs_gain_gap": 0.044212326,
+      "clean_mae_nominal": 0.608550312,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 31,
+      "carrier_rotation_deg": 697.5,
+      "measured_own_symbol_gain": 0.5435625016,
+      "phase_only_predicted_gain": 0.476375384,
+      "abs_gain_gap": 0.0671871177,
+      "clean_mae_nominal": 0.5305377571,
+      "clean_frames_passing_nominal": 0
+    },
+    {
+      "timing_offset_samples": 32,
+      "carrier_rotation_deg": 720.0,
+      "measured_own_symbol_gain": 0.5806716604,
+      "phase_only_predicted_gain": 0.5,
+      "abs_gain_gap": 0.0806716604,
+      "clean_mae_nominal": 0.5239389374,
+      "clean_frames_passing_nominal": 0
+    }
+  ]
+}

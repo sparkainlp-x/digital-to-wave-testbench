@@ -1,0 +1,8 @@
+# Hash-locked sources and generated artifacts must never be line-ending converted.
+*.py -text
+*.csv -text
+*.json -text
+*.sha256 -text
+artifacts/SHA256SUMS -text
+*.png binary
+*.pdf binary

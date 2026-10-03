@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "digital-to-wave-testbench"
+version = "0.1.0"
+description = "Synthetic, dimensionless software testbench for the signed-amplitude sine encoding printed in Mun Seok Lee's 'Digital to Wave' preprint: seeded noise, phase, carrier-frequency-offset and integer timing-offset robustness benchmarks with Wilson intervals and closed-form calibration; no physical validity claimed"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "AGPL-3.0-only"
+license-files = ["LICENSE"]
+authors = [{ name = "Jean-François Brisson" }]
+keywords = ["synthetic-data", "benchmark", "signal-processing", "matched-filter", "reproducibility", "timing-offset", "carrier-frequency-offset"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+]
+# Pinned: the committed CSV/PNG artifacts are byte-identical with exactly these versions.
+dependencies = ["numpy==2.4.6", "matplotlib==3.11.2"]
+
+[project.optional-dependencies]
+test = ["pytest==9.1.1"]
+
+[project.urls]
+Repository = "https://github.com/sparkainlp-x/digital-to-wave-testbench"
+
+[tool.setuptools]
+# The original v1-v5 modules are hash-locked (MODULES.sha256) and kept as flat top-level modules.
+py-modules = [
+    "digital_to_wave",
+    "robustness_benchmark_v2",
+    "robustness_benchmark_v3",
+    "robustness_benchmark_v4",
+    "robustness_benchmark_v5_timing",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+# Hash-locked original modules are never reformatted or edited.
+extend-exclude = [
+    "digital_to_wave.py",
+    "robustness_benchmark_v2.py",
+    "robustness_benchmark_v3.py",
+    "robustness_benchmark_v4.py",
+    "robustness_benchmark_v5_timing.py",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
