@@ -227,7 +227,7 @@ Pooled pass shares follow the closed-form prediction across ten noise levels, e.
 
 ## Citation
 
-See [CITATION.cff](CITATION.cff); GitHub shows a "Cite this repository" button. Releases are archived on Zenodo under the concept DOI [10.5281/zenodo.23122876](https://doi.org/10.5281/zenodo.23122876), which covers all versions. Each release also gets its own version DOI: v0.3.0 is [10.5281/zenodo.23127448](https://doi.org/10.5281/zenodo.23127448) and v0.2.0 is [10.5281/zenodo.23122877](https://doi.org/10.5281/zenodo.23122877). Cite a version DOI when you need to refer to exact code. (v0.1.0 was released before Zenodo archiving was enabled and has no DOI.) Please also cite the source preprint (above) when you refer to the encoding equation.
+See [CITATION.cff](CITATION.cff); GitHub shows a "Cite this repository" button. Releases are archived on Zenodo under the concept DOI [10.5281/zenodo.23122876](https://doi.org/10.5281/zenodo.23122876), which covers all versions. Each release also gets its own version DOI: v0.4.0 is [10.5281/zenodo.23127940](https://doi.org/10.5281/zenodo.23127940), v0.3.0 is [10.5281/zenodo.23127448](https://doi.org/10.5281/zenodo.23127448) and v0.2.0 is [10.5281/zenodo.23122877](https://doi.org/10.5281/zenodo.23122877). Cite a version DOI when you need to refer to exact code. (v0.1.0 was released before Zenodo archiving was enabled and has no DOI.) Please also cite the source preprint (above) when you refer to the encoding equation.
 
 ## License
 
