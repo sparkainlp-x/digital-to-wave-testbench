@@ -42,6 +42,17 @@ The full run writes `artifacts/robustness-benchmark-v7-clock-drift-cfo.json`, `.
 
 The tests use an independent seed and reduced trial counts; they verify waveform construction, exact oracle recovery in a clean impairment-free case, blind-search API independence from the truth, determinism, validator rejection of tampering, and module hash consistency.
 
+## Lock history and disclosure
+
+This section was added after the full run, for transparency; the conditions above were not changed after results existed.
+
+- `fa2be33` locked this protocol text first, with noise standard deviations `0` and `0.45` only and no module hash.
+- `50d56cc` added the noise level `σ = 0.25` and recorded the first module hash. This happened after the first lock but before any v7 results existed.
+- `5e1d272` fixed an overflow in the exact McNemar computation and re-locked the module, still before any results existed.
+- `8da0e5e` committed a first full-protocol run generated from `5e1d272`. Despite its title, that commit contains only result files.
+- `1625166` changed the module so that pooled (all-vector) blind-search rows also report timing and joint acquisition, and re-locked it (hash above). The full protocol was then re-run from `1625166` with a clean tracked tree; those are the committed results (`48f8367`).
+- Comparing the two full runs: all 1,701 result rows have identical frame pass counts, Wilson intervals and error statistics, and the paired-comparison CSV is byte-identical. The only difference is that the 81 pooled blind-search rows gained the acquisition fields that were empty in the first run (plus the recorded commit and v7 module hash).
+
 ## Interpretation limits
 
 This is a synthetic dimensionless test of a specified signal and receiver model. Its oracle is an informed upper bound, and the blind search assumes known frame/symbol lengths, known carrier family, known guard size and bounded static impairment grids. It does not establish physical performance or address unmodeled impairments.

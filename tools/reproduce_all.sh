@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Regenerate every committed artifact (v2-v7 JSON/CSV/PNG, timing diagnostic) and SHA256SUMS.
-# Runtime: about 1.5 min on a laptop (v6 alone is about 70 s). Outputs are deterministic for a given environment;
+# Runtime: about 4.5 min on a laptop (v7 alone is about 3 min, v6 about 70 s). Outputs are deterministic for a given environment;
 # CSV and PNG files are byte-identical with the pinned dependencies (see pyproject.toml).
 # JSON files embed the Python/NumPy/Matplotlib versions, so their hashes are environment-specific.
 set -euo pipefail
