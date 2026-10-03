@@ -5,13 +5,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "digital-to-wave-testbench"
 version = "0.2.0"
-description = "Synthetic, dimensionless software testbench for the signed-amplitude sine encoding printed in Mun Seok Lee's 'Digital to Wave' preprint: seeded noise, phase, carrier-frequency-offset and timing-offset robustness benchmarks and a blind timing-recovery baseline, with Wilson intervals and closed-form calibration; no physical validity claimed"
+description = "Synthetic, dimensionless software testbench for the signed-amplitude sine encoding printed in Mun Seok Lee's 'Digital to Wave' preprint: seeded noise, phase, carrier-frequency-offset, timing and joint clock-drift robustness benchmarks; no physical validity claimed"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "AGPL-3.0-only"
 license-files = ["LICENSE"]
 authors = [{ name = "Jean-François Brisson" }]
-keywords = ["synthetic-data", "benchmark", "signal-processing", "matched-filter", "reproducibility", "timing-offset", "timing-recovery", "carrier-frequency-offset"]
+keywords = ["synthetic-data", "benchmark", "signal-processing", "matched-filter", "reproducibility", "timing-offset", "timing-recovery", "clock-drift", "carrier-frequency-offset"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Programming Language :: Python :: 3",
@@ -31,7 +31,7 @@ test = ["pytest==9.1.1"]
 Repository = "https://github.com/sparkainlp-x/digital-to-wave-testbench"
 
 [tool.setuptools]
-# The original v1-v5 modules and the v6 protocol module are hash-locked (MODULES.sha256), flat top-level modules.
+# The v1-v6 modules and v7 protocol module are hash-locked (MODULES.sha256), flat top-level modules.
 py-modules = [
     "digital_to_wave",
     "robustness_benchmark_v2",
@@ -39,6 +39,7 @@ py-modules = [
     "robustness_benchmark_v4",
     "robustness_benchmark_v5_timing",
     "robustness_benchmark_v6_timing_recovery",
+    "robustness_benchmark_v7_clock_drift_cfo",
 ]
 
 [tool.pytest.ini_options]

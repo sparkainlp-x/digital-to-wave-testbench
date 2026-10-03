@@ -12,8 +12,9 @@ import json
 import math
 import platform
 import subprocess
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 import matplotlib
 
@@ -32,7 +33,7 @@ MASTER_SEED = 20261010
 VECTOR_SEED = 20261004
 TRIALS_PER_VECTOR = 200
 CHUNK_FRAMES = 32
-NOISE_LEVELS = (0.0, 0.45)
+NOISE_LEVELS = (0.0, 0.25, 0.45)
 CFO_LEVELS = (-0.005, 0.0, 0.005)
 CLOCK_LEVELS_PPM = (-2500.0, 0.0, 2500.0)
 TIMING_OFFSETS = (-2.0, 0.0, 2.0)
@@ -113,7 +114,7 @@ def _candidate_decode(
 ) -> np.ndarray:
     """Resample at candidate symbol times and project onto the candidate carrier."""
     b = np.asarray(buffer, dtype=float)
-    if b.ndim != 2 or b.shape[1] != BUFFER_SAMPLES or not np.all(np.isfinite(b)):
+    if b.ndim != 2 or b.shape[0] == 0 or b.shape[1] != BUFFER_SAMPLES or not np.all(np.isfinite(b)):
         raise ValueError("buffer must be a finite (frames, 2176) array")
     source = np.arange(FRAME_SAMPLES, dtype=float)
     sample_positions = GUARD_SAMPLES + (source - timing) / (1.0 + ppm * 1e-6)
@@ -132,7 +133,7 @@ def _candidate_decode(
 def blind_joint_search(buffer: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Choose timing, clock ppm and CFO using only the received buffer."""
     b = np.asarray(buffer, dtype=float)
-    if b.ndim != 2 or b.shape[1] != BUFFER_SAMPLES or not np.all(np.isfinite(b)):
+    if b.ndim != 2 or b.shape[0] == 0 or b.shape[1] != BUFFER_SAMPLES or not np.all(np.isfinite(b)):
         raise ValueError("buffer must be a finite (frames, 2176) array")
     candidates = sorted(
         ((d, p, f) for d in SEARCH_TIMING_OFFSETS for p in SEARCH_CLOCK_LEVELS_PPM for f in SEARCH_CFO_LEVELS),
@@ -160,12 +161,13 @@ def _mcnemar(a_pass_b_fail: int, a_fail_b_pass: int) -> float:
 
 
 def _summary(
-    errors: np.ndarray, timing_acquired: np.ndarray | None, joint_acquired: np.ndarray | None
+    errors: np.ndarray, timing_acquired: np.ndarray | None, joint_acquired: np.ndarray | None,
+    *, include_intervals: bool,
 ) -> dict[str, Any]:
     absolute = np.abs(errors)
     passed = np.max(absolute, axis=1) <= TOLERANCE
     frames, count = int(errors.shape[0]), int(np.count_nonzero(passed))
-    if frames > 1:
+    if include_intervals and frames > 1:
         low, high = wilson_interval(count, frames)
     else:
         low = high = None
@@ -174,13 +176,15 @@ def _summary(
     else:
         acq_count = int(np.count_nonzero(timing_acquired))
         acq_share = acq_count / frames
-        acq_low, acq_high = wilson_interval(acq_count, frames) if frames > 1 else (None, None)
+        acq_low, acq_high = wilson_interval(acq_count, frames) if include_intervals and frames > 1 else (None, None)
     if joint_acquired is None:
         joint_count = joint_share = joint_low = joint_high = None
     else:
         joint_count = int(np.count_nonzero(joint_acquired))
         joint_share = joint_count / frames
-        joint_low, joint_high = wilson_interval(joint_count, frames) if frames > 1 else (None, None)
+        joint_low, joint_high = (
+            wilson_interval(joint_count, frames) if include_intervals and frames > 1 else (None, None)
+        )
     return {
         "frames": frames,
         "frames_passing": count,
@@ -306,6 +310,7 @@ def run_benchmark(
                     errors_by_method[method],
                     timing_acquired if method == BLIND else None,
                     joint_acquired if method == BLIND else None,
+                    include_intervals=sigma > 0,
                 )
                 result_rows.append({
                     "cfo_cycles_per_symbol": cfo, "clock_error_ppm": ppm, "timing_offset_samples": delay,
@@ -325,12 +330,13 @@ def run_benchmark(
         pooled_passes = {m: np.concatenate(v) for m, v in passes_for_pool.items()}
         pooled_errors = {m: np.concatenate(v) for m, v in vectors_for_pool.items()}
         for method in METHODS:
-            stats = _summary(pooled_errors[method], None, None)
+            stats = _summary(pooled_errors[method], None, None, include_intervals=sigma > 0)
             stats["frames_passing"] = int(np.count_nonzero(pooled_passes[method]))
             stats["frame_pass_share"] = stats["frames_passing"] / stats["frames"]
-            stats["wilson95_lower"], stats["wilson95_upper"] = wilson_interval(
-                stats["frames_passing"], stats["frames"]
-            ) if stats["frames"] > 1 else (None, None)
+            if sigma > 0 and stats["frames"] > 1:
+                stats["wilson95_lower"], stats["wilson95_upper"] = wilson_interval(
+                    stats["frames_passing"], stats["frames"]
+                )
             result_rows.append({
                 "cfo_cycles_per_symbol": cfo, "clock_error_ppm": ppm, "timing_offset_samples": delay,
                 "noise_std": sigma, "vector_pattern": "POOLED_ALL_VECTORS", "method": method, **stats,
@@ -367,7 +373,10 @@ def run_benchmark(
             ORACLE: "exact impairment parameters; linear resampling and least-squares carrier projection",
             BLIND: "joint bounded grid search maximizing sum of squared decoded values",
         },
-        "acquisition_rule": "all estimates within one grid step: timing 2 samples, clock 2500 ppm, CFO 0.005 cycles/symbol",
+        "acquisition_rule": (
+            "all estimates within one grid step: timing 2 samples, clock 2500 ppm, "
+            "CFO 0.005 cycles/symbol"
+        ),
         "paired_methods": "all receivers use identical noisy buffers; exact two-sided McNemar tests",
         "vector_patterns": {k: np.asarray(v).tolist() for k, v in patterns.items()},
         "module_sha256": hashes, **git_provenance(),
@@ -377,7 +386,8 @@ def run_benchmark(
         "limitations": [
             "synthetic model only; no physical claim",
             "known frame and symbol lengths, known waveform family and noise-only guards",
-            "static CFO and clock error, linear interpolation, no pulse shaping, jitter, filtering or time-varying impairments",
+            "static CFO and clock error, linear interpolation, no pulse shaping, jitter, filtering "
+            "or time-varying impairments",
             "oracle is informed of impairments; blind search is limited to the declared grid",
         ],
     }

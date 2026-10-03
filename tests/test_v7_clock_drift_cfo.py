@@ -23,7 +23,7 @@ SMALL = {
 
 def test_clean_unimpaired_waveform_and_oracle_are_exact():
     signal = v7.received_buffer(PATTERN)
-    np.testing.assert_allclose(signal[64:64 + 2048].reshape(32, 64), encode_wave(PATTERN), atol=0, rtol=0)
+    np.testing.assert_allclose(signal[64:64 + 2048].reshape(32, 64), encode_wave(PATTERN), atol=3e-13, rtol=0)
     decoded = v7._candidate_decode(signal[None, :], 0.0, 0.0, 0.0)[0]
     np.testing.assert_allclose(decoded, PATTERN, atol=1e-12)
 

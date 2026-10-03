@@ -41,8 +41,9 @@ Testbench choices: 64 samples and 4 carrier cycles per symbol (so the carrier ad
 | `robustness_benchmark_v4.py` | v4: continuous carrier-frequency offset (phase ramp over the frame) |
 | `robustness_benchmark_v5_timing.py` | v5: constant integer-sample receiver timing offset with 64-sample zero guards |
 | `robustness_benchmark_v6_timing_recovery.py` | v6 (new in 0.2.0): blind timing-recovery searches, fractional offsets, randomised vectors, clean ±32 sweep; imports v1–v5 unchanged |
-| `MODULES.sha256` | SHA-256 lock for the five original modules (unchanged) plus the v6 module, locked before its full run; checked by tests and CI |
-| `artifacts/` | generated JSON/CSV/PNG for v2–v6 and the timing diagnostic, plus `SHA256SUMS` |
+| `robustness_benchmark_v7_clock_drift_cfo.py` | v7: joint carrier-frequency offset and sample-clock drift with nominal, informed-oracle and blind grid-search receivers; imports v1–v6 unchanged |
+| `MODULES.sha256` | SHA-256 lock for v1–v7 benchmark modules; v7 is locked before its full run and checked by tests and CI |
+| `artifacts/` | generated JSON/CSV/PNG for v2–v7 and the timing diagnostic, plus `SHA256SUMS` |
 | `tools/` | `reproduce_all.sh`, `timing_phase_diagnostic.py` |
 | `reports/` | v6 and v5 protocol locks, v4 and v5 report PDFs (REPORTED) |
 | `tests/` | pytest suite |
@@ -58,6 +59,7 @@ python -m venv .venv && . .venv/bin/activate
 python -m pip install -e ".[test]"        # Python 3.11–3.13; numpy==2.4.6, matplotlib==3.11.2 (pinned)
 
 python robustness_benchmark_v6_timing_recovery.py  # ~65 s; prints the v6 tables and rewrites artifacts/*v6*
+python robustness_benchmark_v7_clock_drift_cfo.py  # writes the v7 joint impairment artifacts
 python robustness_benchmark_v5_timing.py   # ~7 s; prints the v5 table and rewrites artifacts/*v5*
 tools/reproduce_all.sh                     # ~1.5 min; regenerates every artifact and artifacts/SHA256SUMS
 python -m pytest                           # ~20 s; full v3, v4 and v5 protocols, reduced v6 runs with golden counts
@@ -116,6 +118,10 @@ Integer offsets on the v5 grid, six fixed vectors, 12,000 noisy frames per offse
 ![v6 blind timing-recovery summary](artifacts/robustness-benchmark-v6-timing-recovery.png)
 
 **What this shows, and what it does not.** In this synthetic model a standard energy-based timing search (matched-filter output energy over candidate integer starts) recovers oracle-level performance at every tested integer offset, and at the best-integer level for fractional offsets. That is **easy here**: the guards contain noise only, the frame and symbol lengths are known, offsets are constant integers (or constant fractions), there is no clock drift or CFO, the carrier is locked to the sample clock, and the noise is IID Gaussian. It says nothing about real receivers, physical channels or hardware. **No physical validity is claimed.**
+
+### v7 joint clock drift and CFO
+
+**SYNTHETIC.** Protocol: [`reports/v7-clock-drift-cfo-protocol-lock.md`](reports/v7-clock-drift-cfo-protocol-lock.md); results: [`artifacts/robustness-benchmark-v7-clock-drift-cfo.json`](artifacts/robustness-benchmark-v7-clock-drift-cfo.json), [`…csv`](artifacts/robustness-benchmark-v7-clock-drift-cfo.csv) and [`…png`](artifacts/robustness-benchmark-v7-clock-drift-cfo.png). The model combines constant timing offsets, sample-clock errors (±2500 ppm, about ±5.12 samples accumulated over 32 symbols) and CFO (±0.005 extra carrier cycles per symbol), over a full factorial grid with clean and σ = 0.25/0.45 conditions. It compares fixed-window nominal decoding, an oracle informed of all impairments, and a blind bounded joint grid search. Acquisition is reported separately from frame-decoding success, including timing-only and joint timing/clock/CFO acquisition, per-vector results and paired comparisons. These are outcomes of a stipulated synthetic model—not evidence about physical channels. The search assumes known framing, carrier family and guard size; it does not cover pulse shaping, jitter, time-varying CFO or other unmodeled impairments.
 
 ### v5 integer-sample timing offset (seed 20261007; 2,000 frames per vector and offset; σ = 0.45)
 
