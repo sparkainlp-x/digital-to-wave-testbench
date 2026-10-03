@@ -20,7 +20,7 @@ LOCKED_V6 = {
     "robustness_benchmark_v6_timing_recovery.py": "c3f2da47e9da81072cbdc02153c28f6c9b6f5958251a4c91f8d64f9e5cfa112b",
 }
 LOCKED_V7 = {
-    "robustness_benchmark_v7_clock_drift_cfo.py": "270cb38f4d95a6687c481a90c7f4ea19a2f41f9576490da3703d82c76a31c294",
+    "robustness_benchmark_v7_clock_drift_cfo.py": "0aeca681ddac3171b901b7f8fc419360d861200bf474e59e7dd05b6070f50737",
 }
 
 

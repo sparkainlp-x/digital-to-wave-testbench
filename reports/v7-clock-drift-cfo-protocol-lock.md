@@ -25,7 +25,7 @@ The model is deliberately direct: no pulse shaping, channel filtering, clock jit
 - Receiver clock errors: `{-2500, 0, +2500}` ppm. Over 32 symbols these produce approximately `±5.12` nominal samples of accumulated timing drift.
 - Constant timing offsets: `{-2, 0, +2}` samples.
 - Full factorial across CFO, clock error and timing offset, so the matrix includes impairment-free, single-impairment and combined cases. Noise standard deviations: `0`, `0.25` and `0.45`; the two nonzero levels provide more than one stochastic-noise condition.
-- Locked implementation: `robustness_benchmark_v7_clock_drift_cfo.py`, SHA-256 `270cb38f4d95a6687c481a90c7f4ea19a2f41f9576490da3703d82c76a31c294`, also recorded in `MODULES.sha256` and `tests/test_hash_lock.py`. This protocol and the module/tests are committed before the full run.
+- Locked implementation: `robustness_benchmark_v7_clock_drift_cfo.py`, SHA-256 `0aeca681ddac3171b901b7f8fc419360d861200bf474e59e7dd05b6070f50737`, also recorded in `MODULES.sha256` and `tests/test_hash_lock.py`. This protocol and the module/tests are committed before the full run.
 - Inclusive frame pass rule: maximum absolute reconstruction error `≤ 0.25` over 32 values.
 
 ## Receivers and metrics

@@ -48,6 +48,11 @@ def test_blind_search_has_no_truth_parameter_and_is_deterministic():
         np.testing.assert_array_equal(left, right)
 
 
+def test_mcnemar_handles_large_paired_counts_without_overflow():
+    assert v7._mcnemar(600, 600) == pytest.approx(1.0)
+    assert 0.0 <= v7._mcnemar(1199, 1) < 1.0
+
+
 def test_reduced_run_is_deterministic_and_validates():
     first = v7.run_benchmark(**SMALL)
     second = v7.run_benchmark(**SMALL)

@@ -156,8 +156,17 @@ def _mcnemar(a_pass_b_fail: int, a_fail_b_pass: int) -> float:
     total = a_pass_b_fail + a_fail_b_pass
     if total == 0:
         return 1.0
-    tail = sum(math.comb(total, i) for i in range(min(a_pass_b_fail, a_fail_b_pass) + 1))
-    return min(1.0, 2.0 * tail / (2**total))
+    minimum = min(a_pass_b_fail, a_fail_b_pass)
+    if total < 1024:
+        tail = sum(math.comb(total, i) for i in range(minimum + 1))
+        return min(1.0, 2.0 * tail / (2**total))
+    log_terms = [
+        math.lgamma(total + 1) - math.lgamma(i + 1) - math.lgamma(total - i + 1) - total * math.log(2.0)
+        for i in range(minimum + 1)
+    ]
+    peak = max(log_terms)
+    log_probability = math.log(2.0) + peak + math.log(math.fsum(math.exp(term - peak) for term in log_terms))
+    return min(1.0, math.exp(log_probability))
 
 
 def _summary(
