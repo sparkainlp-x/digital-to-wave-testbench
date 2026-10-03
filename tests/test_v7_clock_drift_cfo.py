@@ -61,6 +61,11 @@ def test_reduced_run_is_deterministic_and_validates():
     assert first["results"] == second["results"]
     assert first["paired_comparisons"] == second["paired_comparisons"]
     assert len(first["results"]) == 42
+    pooled_blind = next(
+        row for row in first["results"]
+        if row["method"] == v7.BLIND and row["vector_pattern"] == "POOLED_ALL_VECTORS"
+    )
+    assert pooled_blind["joint_acquisition_share"] is not None
 
 
 def test_validator_rejects_tampering():

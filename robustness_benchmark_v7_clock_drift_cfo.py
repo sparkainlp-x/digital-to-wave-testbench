@@ -278,6 +278,8 @@ def run_benchmark(
     for cell_index, (cfo, ppm, delay, sigma) in enumerate(cell_specs):
         vectors_for_pool: dict[str, list[np.ndarray]] = {m: [] for m in METHODS}
         passes_for_pool: dict[str, list[np.ndarray]] = {m: [] for m in METHODS}
+        timing_for_pool: list[np.ndarray] = []
+        joint_for_pool: list[np.ndarray] = []
         for vector_index, (name, reference) in enumerate(patterns.items()):
             n_trials = 1 if sigma == 0 else trials
             rng = np.random.default_rng(np.random.SeedSequence([int(master_seed), cell_index, vector_index]))
@@ -314,6 +316,8 @@ def run_benchmark(
             pass_by_method = {m: np.concatenate(v) for m, v in pass_chunks.items()}
             timing_acquired = np.concatenate(timing_acquisition_chunks)
             joint_acquired = np.concatenate(joint_acquisition_chunks)
+            timing_for_pool.append(timing_acquired)
+            joint_for_pool.append(joint_acquired)
             for method in METHODS:
                 stats = _summary(
                     errors_by_method[method],
@@ -339,7 +343,12 @@ def run_benchmark(
         pooled_passes = {m: np.concatenate(v) for m, v in passes_for_pool.items()}
         pooled_errors = {m: np.concatenate(v) for m, v in vectors_for_pool.items()}
         for method in METHODS:
-            stats = _summary(pooled_errors[method], None, None, include_intervals=sigma > 0)
+            stats = _summary(
+                pooled_errors[method],
+                np.concatenate(timing_for_pool) if method == BLIND else None,
+                np.concatenate(joint_for_pool) if method == BLIND else None,
+                include_intervals=sigma > 0,
+            )
             stats["frames_passing"] = int(np.count_nonzero(pooled_passes[method]))
             stats["frame_pass_share"] = stats["frames_passing"] / stats["frames"]
             if sigma > 0 and stats["frames"] > 1:
