@@ -9,6 +9,14 @@ authors:
     affiliation: "Spark AI NLP"
 version: 0.2.0
 date-released: "2026-10-03"
+doi: 10.5281/zenodo.23122876
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.23122877
+    description: "Version DOI for v0.2.0 (Zenodo record 23122877)"
+  - type: doi
+    value: 10.5281/zenodo.23122876
+    description: "Concept DOI (all versions, Zenodo)"
 license: AGPL-3.0-only
 repository-code: "https://github.com/sparkainlp-x/digital-to-wave-testbench"
 url: "https://sparkainlpx.xyz"
