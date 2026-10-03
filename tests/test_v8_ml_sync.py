@@ -199,3 +199,88 @@ def test_summary_criteria_are_reported(small):
     assert criteria["evaluated_on_full_protocol_grid"] is False
     for key in ("S2_no_v7_grid_regression", "S3_not_worse_than_v7_oracle_on_v7_grid", "S4_extension_gain"):
         assert isinstance(criteria[key]["pass"], bool)
+
+
+# --- committed full-protocol results (artifacts/robustness-benchmark-v8-ml-sync.*) -------------------------
+
+ARTIFACTS = v8.ARTIFACTS
+COMMITTED_JSON = ARTIFACTS / f"{v8.STEM}.json"
+
+
+@pytest.fixture(scope="module")
+def committed():
+    import json
+
+    return json.loads(COMMITTED_JSON.read_text(encoding="utf-8"))
+
+
+def test_committed_results_validate_and_come_from_the_lock_commit(committed):
+    v8.validate_result(committed)
+    contract = committed["contract"]
+    assert contract["full_protocol_run"] is True and contract["master_seed"] == v8.MASTER_SEED == 20261011
+    assert contract["git_tracked_tree_clean_at_run_start"] is True
+    assert contract["git_commit"] == "ba0143e55f99b3a508082f81f9174cf9dec54f02"
+    assert "no physical validity claimed" in contract["classification"]
+    assert len(committed["results"]) == len(v8.protocol_cells()) * (len(PATTERNS) + 1) * len(v8.METHODS)
+
+
+def test_committed_summary_is_recomputed_from_rows(committed):
+    recomputed = v8.summarize(committed["results"], committed["paired_comparisons"], True)
+    assert recomputed == committed["summary"]
+
+
+def test_committed_csv_files_match_json(committed, tmp_path):
+    paths = v8.write_outputs(committed, tmp_path)
+    for key in ("csv", "paired_csv"):
+        assert paths[key].read_bytes() == (ARTIFACTS / paths[key].name).read_bytes()
+
+
+def test_committed_headline_numbers(committed):
+    weak = committed["summary"]["weak_cell"]
+    assert weak["frames"] == 1200
+    assert weak["frames_passing"] == {v8.NOMINAL: 0, v8.ORACLE: 1117, v8.ORACLE_LS: 1150, v8.V7_BLIND: 1034,
+                                      v8.V8_BLIND: 1150}
+    assert weak["joint_acq_loose_frames"] == {v8.V7_BLIND: 528, v8.V8_BLIND: 1199}
+    pair = weak["paired"][f"{v8.V8_BLIND}_vs_{v8.V7_BLIND}"]
+    assert (pair["a_pass_b_fail"], pair["a_fail_b_pass"]) == (132, 16)
+    assert pair["mcnemar_exact_two_sided_p"] < 1e-20
+    criteria = committed["summary"]["success_criteria"]
+    assert criteria["evaluated_on_full_protocol_grid"] is True
+    for key in ("S1_weak_cell", "S2_no_v7_grid_regression", "S3_not_worse_than_v7_oracle_on_v7_grid",
+                "S4_extension_gain"):
+        assert criteria[key]["pass"] is True, key
+    assert criteria["improvement_real"] is True
+    assert criteria["all_cells_where_v8_significantly_worse_than_v7"] == []
+    totals = committed["summary"]["by_noise"]["0.45"]["all_cells"]["totals"]
+    assert {m: totals[m]["frames_passing"] for m in v8.METHODS} == {
+        v8.NOMINAL: 4046, v8.ORACLE: 116102, v8.ORACLE_LS: 119310, v8.V7_BLIND: 109753, v8.V8_BLIND: 119273}
+
+
+def test_committed_disclosed_shortfall_versus_raw_ls_oracle(committed):
+    """v8 is slightly below the informed raw-LS oracle when pooled (small search loss); disclosed in the README."""
+    pooled = committed["summary"]["by_noise"]["0.45"]["all_cells"]["paired"][f"{v8.V8_BLIND}_vs_{v8.ORACLE_LS}"]
+    assert (pooled["a_pass_b_fail"], pooled["a_fail_b_pass"]) == (35, 72)
+    assert committed["summary"]["success_criteria"]["reported_v8_vs_raw_ls_oracle_significant_cells"] == []
+
+
+@pytest.mark.parametrize("cell", [v8.WEAK_CELL, (0.01, 1250.0, 2.0, 0.45)])
+def test_full_size_protocol_cell_rerun_matches_committed_rows(committed, cell):
+    """Byte-level spot check of the full run: one v7 cell and one extension cell, 1,200 frames each."""
+    import csv
+    import io
+
+    rerun = v8.reproduce_protocol_cell(*cell)
+
+    def lines(rows, fields):
+        buffer = io.StringIO()
+        writer = csv.DictWriter(buffer, fieldnames=fields, lineterminator="\n")
+        writer.writerows(rows)
+        return buffer.getvalue().splitlines()
+
+    committed_csv = set((ARTIFACTS / f"{v8.STEM}.csv").read_text(encoding="utf-8").splitlines())
+    committed_paired = set((ARTIFACTS / f"{v8.STEM}-paired.csv").read_text(encoding="utf-8").splitlines())
+    result_lines = lines(rerun["rows"], v8.RESULT_FIELDS)
+    pair_lines = lines(rerun["paired"], v8.PAIR_FIELDS)
+    assert len(result_lines) == (len(PATTERNS) + 1) * len(v8.METHODS)
+    assert all(line in committed_csv for line in result_lines)
+    assert all(line in committed_paired for line in pair_lines)

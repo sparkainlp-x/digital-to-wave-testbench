@@ -18,16 +18,16 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: python -m pip install --upgrade pip ruff
       - run: python -m pip install ".[test]"
-      - name: Hash-locked v1-v5 modules and the locked v6 protocol module are unchanged
+      - name: Hash-locked v1-v5 modules and the locked v6, v7 and v8 protocol modules are unchanged
         run: sha256sum -c MODULES.sha256
       - name: Lint (tests and tools; locked modules excluded)
         run: ruff check .
-      - name: Tests (full v3, v4 and v5 protocols; reduced v6 runs with golden counts)
+      - name: Tests (full v3, v4 and v5 protocols; reduced v6-v8 runs; two full-size v8 cells vs committed rows)
         run: python -m pytest
-      - name: Committed CSV and PNG artifacts are reproduced byte for byte
+      - name: Committed v2-v7 CSV and PNG artifacts are reproduced byte for byte (v8 spot-checked in tests)
         run: |
           cp -r artifacts "$RUNNER_TEMP/committed"
-          tools/reproduce_all.sh
+          SKIP_V8=1 tools/reproduce_all.sh
           for f in "$RUNNER_TEMP"/committed/*.csv "$RUNNER_TEMP"/committed/*.png; do
             cmp "$f" "artifacts/$(basename "$f")"
           done

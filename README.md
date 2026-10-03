@@ -1,6 +1,6 @@
 # Digital to Wave Testbench
 
-**A synthetic, dimensionless software testbench for the signed-amplitude sine encoding printed in Mun Seok Lee's *Digital to Wave* preprint**, with seeded robustness benchmarks for sample noise, carrier-phase mismatch, carrier-frequency offset and receiver timing offset, a blind timing-recovery baseline (v6) and a joint clock-drift/CFO benchmark (v7).
+**A synthetic, dimensionless software testbench for the signed-amplitude sine encoding printed in Mun Seok Lee's *Digital to Wave* preprint**, with seeded robustness benchmarks for sample noise, carrier-phase mismatch, carrier-frequency offset and receiver timing offset, a blind timing-recovery baseline (v6), a joint clock-drift/CFO benchmark (v7) and an improved blind joint synchronizer (v8: maximum-likelihood metric with coarse-to-fine refinement).
 
 [![tests](https://github.com/sparkainlp-x/digital-to-wave-testbench/actions/workflows/tests.yml/badge.svg)](https://github.com/sparkainlp-x/digital-to-wave-testbench/actions/workflows/tests.yml)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](LICENSE)
@@ -17,7 +17,7 @@ Evidence tags used below: **SYNTHETIC** (produced by code in this repository on 
 - **Not a model of lab-grown diamond (LGD), spin waves, phonons, NV centres, GHz hardware or any biological signal.** None of those are simulated.
 - **Not a measured or realistic channel.** Noise is IID Gaussian/Laplace on samples; segments have abrupt, unfiltered boundaries; the timing grid, CFO grid and tolerances are arbitrary software stress values.
 - **Not a validation of the cited preprint.** The preprint supplies the encoding equation only. The sampling, framing, matched-filter decoder, noise, scoring rule (max |error| ≤ 0.25 over 32 values) and all experiments are this project's own choices. The preprint's author has not reviewed or endorsed this software.
-- **Not a preregistration.** v4, v5 and v6 conditions were fixed in a protocol lock before the full run (for v6 the lock was committed and pushed first), but these are exploratory software protocols.
+- **Not a preregistration.** v4–v8 conditions were fixed in a protocol lock before the full run (for v6–v8 the lock was committed and pushed first; for v8 CI was green on the lock commit before the run), but these are exploratory software protocols.
 
 ## Source equation and attribution
 
@@ -42,10 +42,11 @@ Testbench choices: 64 samples and 4 carrier cycles per symbol (so the carrier ad
 | `robustness_benchmark_v5_timing.py` | v5: constant integer-sample receiver timing offset with 64-sample zero guards |
 | `robustness_benchmark_v6_timing_recovery.py` | v6 (new in 0.2.0): blind timing-recovery searches, fractional offsets, randomised vectors, clean ±32 sweep; imports v1–v5 unchanged |
 | `robustness_benchmark_v7_clock_drift_cfo.py` | v7 (new in 0.3.0): joint carrier-frequency offset and sample-clock drift with nominal, informed-oracle and blind grid-search receivers; imports v1–v6 unchanged |
-| `MODULES.sha256` | SHA-256 lock for v1–v7 benchmark modules; v7 is locked before its full run and checked by tests and CI |
-| `artifacts/` | generated JSON/CSV/PNG for v2–v7 and the timing diagnostic, plus `SHA256SUMS` |
-| `tools/` | `reproduce_all.sh`, `timing_phase_diagnostic.py` |
-| `reports/` | v6 and v5 protocol locks, v4 and v5 report PDFs (REPORTED) |
+| `robustness_benchmark_v8_ml_sync.py` | v8 (new in 0.4.0): blind joint synchronization with a raw-sample GLRT metric, coarse-to-fine ridge-coordinate refinement and a raw least-squares decoder, compared with the v7 blind search and two informed oracles; imports v1–v7 unchanged |
+| `MODULES.sha256` | SHA-256 lock for v1–v8 benchmark modules; v7 and v8 were locked before their full runs; checked by tests and CI |
+| `artifacts/` | generated JSON/CSV/PNG for v2–v8 and the timing diagnostic, plus `SHA256SUMS` |
+| `tools/` | `reproduce_all.sh`, `timing_phase_diagnostic.py`, `v7_weak_cell_diagnostic.py` (v8 development-seed diagnosis) |
+| `reports/` | v5–v8 protocol locks, v4 and v5 report PDFs (REPORTED) |
 | `tests/` | pytest suite |
 
 The five original modules (and v6, which imports them) are kept as flat top-level modules with their original filenames because they import each other by those names (`from digital_to_wave import …`) and are hash-locked. Each script writes to `artifacts/` next to itself.
@@ -60,9 +61,10 @@ python -m pip install -e ".[test]"        # Python 3.11–3.13; numpy==2.4.6, ma
 
 python robustness_benchmark_v6_timing_recovery.py  # ~65 s; prints the v6 tables and rewrites artifacts/*v6*
 python robustness_benchmark_v7_clock_drift_cfo.py  # ~3 min; prints v7 summary lines and rewrites artifacts/*v7*
+python robustness_benchmark_v8_ml_sync.py          # ~6 min on 8 cores; prints the v8 weak cell and criteria, rewrites artifacts/*v8*
 python robustness_benchmark_v5_timing.py   # ~7 s; prints the v5 table and rewrites artifacts/*v5*
-tools/reproduce_all.sh                     # ~4.5 min; regenerates every artifact and artifacts/SHA256SUMS
-python -m pytest                           # ~20 s; full v3, v4 and v5 protocols, reduced v6 and v7 runs
+tools/reproduce_all.sh                     # ~10 min; regenerates every artifact and artifacts/SHA256SUMS (SKIP_V8=1: ~4.5 min)
+python -m pytest                           # ~1 min; full v3-v5 protocols, reduced v6-v8 runs, two full-size v8 cells
 sha256sum -c MODULES.sha256
 ```
 
@@ -85,6 +87,41 @@ start, est = v6.matched_filter_energy_search(buf)              # blind: start ==
 ## Results
 
 All results are **SYNTHETIC**: six fixed 32-value vectors (three structured, three seeded random with seed `20261004`), pass iff max |error| ≤ 0.25, 95% Wilson intervals conditional on this fixed panel and the IID noise draws. They quantify Monte Carlo variation only, not model or physical uncertainty.
+
+### v8 blind synchronization: GLRT metric + coarse-to-fine refinement (seed 20261011; new in v0.4.0)
+
+**SYNTHETIC; no physical validity claimed.** Command: `python robustness_benchmark_v8_ml_sync.py` (~6 min on 8 cores, ~27 CPU-minutes). Protocol and diagnosis, committed and pushed with CI green **before** the full run: [`reports/v8-ml-sync-protocol-lock.md`](reports/v8-ml-sync-protocol-lock.md) (lock commit [`ba0143e`](https://github.com/sparkainlp-x/digital-to-wave-testbench/commit/ba0143e55f99b3a508082f81f9174cf9dec54f02); the results JSON records that commit, a clean tracked tree and the SHA-256 of the v1–v8 modules). Results: [`artifacts/robustness-benchmark-v8-ml-sync.json`](artifacts/robustness-benchmark-v8-ml-sync.json), [`…csv`](artifacts/robustness-benchmark-v8-ml-sync.csv), [`…-paired.csv`](artifacts/robustness-benchmark-v8-ml-sync-paired.csv), [`…png`](artifacts/robustness-benchmark-v8-ml-sync.png). The v1–v7 modules and artifacts are unchanged.
+
+**Why v7's joint acquisition failed (diagnosis, development seed `20261111`).** In the received samples the carrier runs at `(4 + cfo)(1 + ppm·1e-6)` cycles per symbol, so −2500 ppm of clock error looks like −0.01 cycles/symbol of CFO; only the ≈5-sample symbol-boundary drift tells them apart. v7 scored candidates by `Σ estimate²` *after linear-interpolation resampling*, which attenuates the carrier at fractional positions (mean energy factor ≈0.975). The true candidate (−2500 ppm) needs fractional positions and the ridge point (0 ppm, −0.01 cycles/symbol) does not, so on clean buffers the ridge point already scored higher than the truth for 4 of 6 vectors, and with noise v7 picked one or the other about half the time. That ridge point is two CFO steps away, so joint acquisition fails. It was not grid resolution (the truth is on the grid), not an asymmetric grid (both grids are symmetric) and not a tie-break (no exact ties). The asymmetry between −2500 and +2500 ppm comes from frame-edge geometry. Script: [`tools/v7_weak_cell_diagnostic.py`](tools/v7_weak_cell_diagnostic.py).
+
+**v8 receiver (never told the impairments).** (1) Score candidates with the Gaussian generalized likelihood ratio on the **raw** samples: per-symbol least-squares fit of `sin(2π(4+cfo)t/64 + π/4)`, score = fitted energy (maximum likelihood under white Gaussian noise). (2) Search v7's 125-point grid. (3) Refine the 3 best coarse candidates per frame in **ridge coordinates** (timing, ppm, carrier offset), with three 3×3×3 levels from half the coarse step, halving each level, inside v7's search envelope. (4) Decode with the least-squares amplitudes of the same raw fit (no interpolation). Grid: CFO {±0.01, ±0.005, 0} × clock {±5000, ±2500, ±1250, 0} ppm × timing {±2, 0} × σ {0, 0.25, 0.45}. That is 105 impairment cells, 1,200 noisy frames per cell and σ. They include all 27 v7 cells (both clock signs) plus a symmetric extension (off-grid ±1250 ppm, edge ±5000 ppm and ±0.01 CFO). Receivers: nominal; the unchanged **v7 oracle** (exact parameters, v7 resampling decoder); a **raw-LS oracle** (exact parameters, v8 decoder); the unchanged **v7 blind search** re-run on the same buffers; **v8**.
+
+**Weak cell (CFO 0, −2500 ppm, +2 samples, σ = 0.45; 1,200 frames, fresh seed):**
+
+| receiver | frames passing | 95% Wilson | joint acquisition (v7 rule) |
+|---|---|---|---|
+| nominal | 0 | 0–0.32% | — |
+| v7 blind (re-run) | 1,034 (86.2%) | 84.1–88.0% | 528 (44.0%) |
+| v7 oracle | 1,117 (93.1%) | 91.5–94.4% | (informed) |
+| raw-LS oracle | 1,150 (95.8%) | 94.6–96.8% | (informed) |
+| **v8** | **1,150 (95.8%)** | **94.6–96.8%** | **1,199 (99.9%; Wilson 99.5–99.99%)** |
+
+Paired exact McNemar for v8: against v7 blind, 132 vs 16 discordant frames (p = 7.0e-24); against the v7 oracle, 50 vs 17 (p = 6.7e-5); against the raw-LS oracle, 0 vs 0 (p = 1). For the two other timing offsets of the same CFO/clock cell, v8 vs v7 blind is 1,140 vs 1,048 and 1,136 vs 1,045 (p ≤ 3e-17), with joint acquisition 1,197 and 1,199 vs 566 and 567.
+
+**Overall (σ = 0.45, 105 cells, 126,000 frames):** v8 passes 119,273 (94.66%, Wilson 94.54–94.78%). v7 blind passes 109,753 (87.11%), the v7 oracle 116,102 (92.14%) and the raw-LS oracle 119,310 (94.69%). v8 vs v7 blind: 11,001 vs 1,481 discordant (p below double precision, stored as 0). On the 27 v7 cells: v8 30,723 vs v7 blind 29,731 (1,308 vs 316, p = 3e-143), v7 oracle 30,085. On the 78 extension cells: v8 88,550 vs v7 blind 80,022. The largest gain is at off-grid ±1250 ppm, e.g. CFO +0.01, +1250 ppm, +2: v8 1,127 vs v7 blind 351. Joint acquisition, v7 rule: v8 125,969 (99.98%) vs v7 119,733 (95.0%). Strict rule (half a grid step): v8 125,142 (99.3%) vs v7 83,733 (66.5%). At σ = 0.25, v8 and the raw-LS oracle pass all 126,000 frames; v7 blind passes 122,631 and the v7 oracle 125,977.
+
+**Pre-stated criteria (all evaluated mechanically in the JSON):** S1 weak cell (joint acquisition ≥ 95% and a gain over v7 blind with p < 0.01) **met**. S2 no v7-grid cell where v8 is significantly worse than v7 blind: **met** (0 of 54 noisy cells; 0 of all 210). S3 no v7-grid cell where v8 is significantly worse than the v7 oracle: **met**. S4 extension gain over v7 blind at both noise levels: **met**. Of the 210 noisy cells, v8 beats v7 blind significantly in 95 (unadjusted p < 0.05) and in 74 after Bonferroni correction over 210 cells; the weak cell survives any correction.
+
+**Where v8 is no better, or worse (honest reading):**
+- **Gains over the v7 oracle come from the decoder, not the search.** The v7 oracle uses interpolation that attenuates the carrier, so it is *not* an upper bound for v8's decoder. The fair informed reference is the raw-LS oracle. Pooled at σ = 0.45, v8 is slightly **below** it: 35 vs 72 discordant frames, p = 4.5e-4. That is a small search loss of 37 frames in 126,000, with no single cell significant. Its largest per-cell shortfall is 7 frames (CFO +0.01, −1250 ppm, 0).
+- **No gain in 83 of 210 noisy cells.** v8 passes exactly as many frames as v7 blind in 78 cells, mostly cells where v7 already matched its oracle. In the other 5 (clock error 0, or CFO −0.005/+1250 ppm) it passes 1–2 frames fewer. None of these differences is significant.
+- **Strict joint acquisition is lower than v7's in 36 cells**, mainly clock-error-0 cells, where v7's grid contains the truth exactly and v8's refinement can drift off it. The lowest is 1,131/1,200 (94.3%) at CFO 0, 0 ppm, −2 samples, σ = 0.45, versus 1,200 for v7. Decoding is barely affected, because inside a likelihood plateau the received model, and so the raw-LS decoder, does not change. v8's loose (v7-rule) joint acquisition is below 100% in 13 cells (lowest 1,192/1,200).
+- In 3 cells near zero net carrier offset (e.g. CFO −0.01, +2500 ppm, 0 samples), the uncorrected nominal decoder passes 41 frames in total that v8 fails (v8 still wins those cells overall).
+- **Cost:** v8 evaluates about 360 candidates per frame (v7: 125). The full protocol takes about 27 CPU-minutes. CI therefore does not re-run all of v8. It re-runs two full-size cells (the weak cell and CFO +0.01/+1250 ppm/+2) and checks them line by line against the committed CSVs. A full local re-run under Python 3.13 reproduced the v8 CSV and PNG byte for byte.
+
+**Interpretation limits.** This is still an easy synthetic setting: known frame and symbol lengths, known waveform family, noise-only guards, static impairments inside a bounded search envelope, integer timing offsets in the grid, IID Gaussian noise. It says nothing about physical channels or hardware.
+
+![v8 GLRT + coarse-to-fine blind sync vs v7](artifacts/robustness-benchmark-v8-ml-sync.png)
 
 ### v6 blind timing recovery (seed 20261009; σ = 0.45; new in v0.2.0)
 
@@ -124,6 +161,8 @@ Integer offsets on the v5 grid, six fixed vectors, 12,000 noisy frames per offse
 **SYNTHETIC.** Command: `python robustness_benchmark_v7_clock_drift_cfo.py` (~3 min). Protocol: [`reports/v7-clock-drift-cfo-protocol-lock.md`](reports/v7-clock-drift-cfo-protocol-lock.md); results: [`artifacts/robustness-benchmark-v7-clock-drift-cfo.json`](artifacts/robustness-benchmark-v7-clock-drift-cfo.json), [`…csv`](artifacts/robustness-benchmark-v7-clock-drift-cfo.csv) and [`…png`](artifacts/robustness-benchmark-v7-clock-drift-cfo.png). The model combines constant timing offsets, sample-clock errors (±2500 ppm, about ±5.12 samples accumulated over 32 symbols) and CFO (±0.005 extra carrier cycles per symbol), over a full factorial grid with clean and σ = 0.25/0.45 conditions. It compares fixed-window nominal decoding, an oracle informed of all impairments, and a blind bounded joint grid search. Acquisition is reported separately from frame-decoding success, including timing-only and joint timing/clock/CFO acquisition, per-vector results and paired comparisons. These are outcomes of a stipulated synthetic model—not evidence about physical channels. The search assumes known framing, carrier family and guard size; it does not cover pulse shaping, jitter, time-varying CFO or other unmodeled impairments.
 
 The full protocol ran from commit `1625166` with a clean tracked tree. For the no-impairment cell at σ = 0.45, all three receivers pass 1,136/1,200 frames. For CFO `+0.005`, clock error `+2500 ppm` and timing offset `+2` samples, the nominal receiver passes 0/1,200, while both the oracle and blind search pass 1,068/1,200; the blind search acquires all three parameters in 1,200/1,200 frames for that cell. Acquisition is not uniformly identifiable: at CFO 0, clock error −2500 ppm and timing +2 samples, timing acquisition is 100%, but joint parameter acquisition is 44% at σ = 0.45, and the blind pass count (1,056) is below the oracle (1,119). Results therefore distinguish accurate symbol timing from identifying the entire impairment tuple.
+
+**Follow-up (v0.4.0).** The weak cell was diagnosed and addressed in v8 (see above). The cause is a clock/CFO ridge combined with a metric biased by interpolation. The v7 module and its artifacts are unchanged.
 
 **Disclosure (run history).** A first full-protocol v7 run was committed in [`8da0e5e`](https://github.com/sparkainlp-x/digital-to-wave-testbench/commit/8da0e5e8c7e69d4eabc8e3bdce554e6296b2c665); it had been generated from commit `5e1d272` (an earlier locked module). The module was then changed so that the pooled (all-vector) blind-search rows also report acquisition, re-locked in [`1625166`](https://github.com/sparkainlp-x/digital-to-wave-testbench/commit/1625166418cddd39114f3ff52e49bead8571edef), and the full protocol was re-run; the committed results come from that re-run. Between the two runs all 1,701 result rows have identical pass counts and error statistics, and the paired comparisons are byte-identical; the only change is that the 81 pooled blind-search rows gained the timing and joint acquisition fields that were empty in the first run. The σ = 0.25 noise level was added after the protocol was first locked but before any results existed. Full lock history: [protocol lock](reports/v7-clock-drift-cfo-protocol-lock.md#lock-history-and-disclosure).
 
@@ -173,15 +212,16 @@ Pooled pass shares follow the closed-form prediction across ten noise levels, e.
 ## Limitations
 
 - **The v5 timing effect is largely carrier-phase rotation.** With 4 cycles in 64 samples, a window that starts Δ samples early or late sees its own symbol rotated by 22.5°·Δ. The clean-frame diagnostic ([`tools/timing_phase_diagnostic.py`](tools/timing_phase_diagnostic.py), [`artifacts/timing-phase-diagnostic.csv`](artifacts/timing-phase-diagnostic.csv)) shows that the decoder's own-symbol gain follows `(64−|Δ|)/64 · cos(22.5°·Δ)` within 0.03 for |Δ| ≤ 8: about 0.92 at ±1, close to 0 at ±4 (90°: clean MAE 0.966, about the always-zero floor's 0.977), and about −0.90 at ±8 (180°: sign inversion, clean MAE ≈ 1.87). At ±16 samples (one full carrier cycle) the gain recovers to 0.79 despite a larger window error. So the v5 grid mostly measures phase sensitivity of a fixed-phase in-phase projector, and only secondarily symbol-boundary (inter-symbol) leakage. Reviewer finding (SYNTHETIC diagnostic added at packaging time; the hash-locked v5 protocol is unchanged).
-- **Timing recovery: done in v6 (SYNTHETIC), in an easy setting.** A blind matched-filter-energy window search recovers oracle-level performance at every tested integer offset and best-integer performance at fractional offsets (see v6). It relies on noise-only guards, a known frame length, a constant offset, a ±16-sample search range, no drift and no CFO; outside its range it can lock onto a sign-inverted alias. The nominal decoder's collapse at ±2 samples is therefore a property of a receiver *without* synchronisation. v7 adds a bounded blind grid search over static timing, clock-error and CFO candidates (see v7). **Still TARGET / UNRUN:** carrier recovery or an I/Q (quadrature) phase-tracking receiver, tracking of time-varying drift or CFO, and interpolating (sub-sample) timing recovery.
+- **Timing recovery: done in v6 (SYNTHETIC), in an easy setting.** A blind matched-filter-energy window search recovers oracle-level performance at every tested integer offset and best-integer performance at fractional offsets (see v6). It relies on noise-only guards, a known frame length, a constant offset, a ±16-sample search range, no drift and no CFO; outside its range it can lock onto a sign-inverted alias. The nominal decoder's collapse at ±2 samples is therefore a property of a receiver *without* synchronisation. v7 adds a bounded blind grid search over static timing, clock-error and CFO candidates (see v7); v8 replaces its metric with a raw-sample likelihood, refines off-grid, and fixes v7's clock/CFO ridge confusion (see v8). **Still TARGET / UNRUN:** carrier recovery or an I/Q (quadrature) phase-tracking receiver, tracking of time-varying drift or CFO, and interpolating (sub-sample) timing recovery.
 - **Fixed six-vector panel.** At ±1 sample the per-vector pass shares range from 10.7% to 62.75%, so pooled shares depend strongly on which vectors were chosen. The v6 randomised-vector panel confirms this: at ±1 the nominal decoder passes 28.4–28.5% with U[−2, 2] vectors but only 9.2–9.5% with the integer alphabet {−2..2}.
-- **Arbitrary software choices.** Constant offsets only: integer in v5, integer and constant fractional in v6, static clock error and CFO on a small grid in v7 (no jitter, time-varying impairments, interpolation or pulse shaping); abrupt segment edges and zero guards; one tolerance (0.25); IID noise; one carrier/sampling ratio. Results describe this model only.
+- **Arbitrary software choices.** Constant offsets only: integer in v5, integer and constant fractional in v6, static clock error and CFO on a small grid in v7 and a symmetric extended grid in v8 (no jitter, time-varying impairments, interpolation or pulse shaping); abrupt segment edges and zero guards; one tolerance (0.25); IID noise; one carrier/sampling ratio. Results describe this model only.
 - **Physical relevance: none claimed.** See [Scope](#scope-what-it-is-not).
 
 ## Roadmap (TARGET)
 
 - An I/Q (quadrature) phase-tracking / carrier-recovery receiver, compared against the oracle under the v4 CFO and v5/v6 timing grids (new module; v1–v6 remain locked).
 - Tracking receivers for time-varying clock drift and CFO beyond v7's static grid, and an interpolating sub-sample timing estimator.
+- Done in v0.4.0 (v8, SYNTHETIC): diagnosis of v7's weak cell (clock/CFO ridge plus an interpolation-biased metric) and a GLRT + coarse-to-fine blind synchronizer that removes it.
 - Done in v0.3.0 (v7, SYNTHETIC): joint static clock-drift/CFO sweep with nominal, informed-oracle and blind bounded grid-search receivers.
 - Done in v0.2.0 (v6, SYNTHETIC): blind integer timing-recovery baseline, fractional offsets and randomised per-frame vectors.
 
