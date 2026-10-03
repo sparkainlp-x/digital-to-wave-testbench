@@ -250,3 +250,54 @@ def test_seed_must_differ_from_earlier_versions():
             v6.run_timing_recovery_benchmark(trials_per_vector_per_condition=1, random_frames_per_offset=1,
                                              master_seed=seed, integer_offsets=(0,), fractional_offsets=(0.0,),
                                              clean_sweep_offsets=(0,))
+
+
+# --- committed full-run artifact (golden checks without re-running the full protocol) ---------------------
+
+ARTIFACT_JSON = v6.ARTIFACTS / f"{v6.ARTIFACT_STEM}.json"
+LOCK_COMMIT = "f41da8efc5e59ffd9b6c9311c73cc6c8ed6fbb3c"
+
+
+@pytest.fixture(scope="module")
+def committed():
+    import json
+
+    return json.loads(ARTIFACT_JSON.read_text(encoding="utf-8"))
+
+
+def test_committed_full_run_validates_and_records_provenance(committed):
+    v6.validate_timing_recovery_result(committed)
+    c = committed["contract"]
+    assert c["full_protocol_run"] is True and c["master_seed"] == v6.MASTER_SEED == 20261009
+    assert c["git_commit"] == LOCK_COMMIT and c["git_tracked_tree_clean_at_run_start"] is True
+    assert c["module_sha256"] == v6.module_hashes()  # all six modules unchanged since the full run
+    assert c["expected_total_stochastic_input_frames"] == 444_000
+
+
+GOLDEN_FULL_ORACLE = {-8: 11405, -4: 11386, -2: 11376, -1: 11367, 0: 11370, 1: 11407, 2: 11382, 4: 11373, 8: 11352}
+GOLDEN_FULL_NOMINAL = {-8: 0, -4: 0, -2: 0, -1: 3167, 0: 11370, 1: 3269, 2: 0, 4: 0, 8: 0}
+GOLDEN_FULL_ENERGY = {-8: 5388, -4: 5221, -2: 5274, -1: 5209, 0: 5132, 1: 5227, 2: 5242, 4: 5278, 8: 5221}
+
+
+def test_committed_full_run_golden_counts(committed):
+    for offset in v6.INTEGER_OFFSETS:
+        o = float(offset)
+        mf = _pooled(committed, v6.PANEL_INTEGER, o, v6.MF_SEARCH)
+        assert mf["frames"] == 12000 and mf["timing_acquired_frames"] == 12000
+        assert mf["frames_passing"] == _pooled(committed, v6.PANEL_INTEGER, o, v6.ORACLE)["frames_passing"]
+        assert mf["frames_passing"] == GOLDEN_FULL_ORACLE[offset]
+        assert _pooled(committed, v6.PANEL_INTEGER, o, v6.NOMINAL)["frames_passing"] == GOLDEN_FULL_NOMINAL[offset]
+        assert _pooled(committed, v6.PANEL_INTEGER, o, v6.ENERGY_SEARCH)["frames_passing"] == GOLDEN_FULL_ENERGY[offset]
+    pairs = [p for p in committed["paired_comparisons"]
+             if p["panel"] == v6.PANEL_INTEGER and p["method_a"] == v6.MF_SEARCH and p["method_b"] == v6.ORACLE]
+    assert len(pairs) == 9 and all(p["a_pass_b_fail"] == p["a_fail_b_pass"] == 0 for p in pairs)
+
+
+def test_committed_csv_matches_json(committed):
+    import csv
+
+    with (v6.ARTIFACTS / f"{v6.ARTIFACT_STEM}.csv").open(encoding="utf-8") as handle:
+        rows = list(csv.DictReader(handle))
+    assert len(rows) == len(committed["results"])
+    for row, ref in zip(rows, committed["results"], strict=True):
+        assert row["method"] == ref["method"] and int(row["frames_passing"]) == ref["frames_passing"]

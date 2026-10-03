@@ -6,6 +6,44 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-03
+
+### Added
+- `robustness_benchmark_v6_timing_recovery.py` (v6, SYNTHETIC): blind timing recovery for the unchanged codec.
+  It imports the hash-locked v1-v5 modules without editing them. Every estimate uses `decode_wave`.
+  - Blind matched-filter-energy window search and raw frame-energy search over integer starts −16..+16, never
+    told the offset; nominal decoder and exact-offset oracle on the same noisy buffers (v5 grid, six fixed
+    vectors, 12,000 frames per offset, σ = 0.45, master seed 20261009). Reports timing-acquisition rates,
+    95% Wilson intervals, analytic predictions, and discordant counts with exact McNemar p-values.
+  - Fractional (sub-sample) offsets from the continuous p.12 waveform sampled at n + Δ
+    (Δ = 0…8), with a best-integer oracle and dense analytic curves.
+  - Randomised per-frame vectors (U[−2, 2] and the integer alphabet {−2..2}) as a sensitivity panel, with
+    both the 0.25 rule and a round-to-integer rule.
+  - Clean deterministic sweep of Δ = −32..32 showing the 16-sample carrier periodicity.
+  - Artifacts: `artifacts/robustness-benchmark-v6-timing-recovery{.json,.csv,.png,-paired.csv,-clean-sweep.csv}`.
+    The JSON records the git commit, whether the tracked tree was clean, and the module SHA-256s.
+- `reports/v6-timing-recovery-protocol-lock.md`: the v6 conditions. They were committed and pushed
+  (`f41da8e`) before the full run, and the v6 module hash was added to `MODULES.sha256`.
+- `tests/test_v6_timing_recovery.py`: closed-form ±1-sample bias, 180° sign inversion at ±8, near-periodicity
+  at ±16, fractional = integer sampling at integer offsets, encoder bit-equivalence, exact clean acquisition,
+  nominal = oracle at 0, McNemar values, determinism, reduced-run golden counts and validator tampering
+  checks, plus checks of the committed full-run artifact.
+
+### Results (SYNTHETIC)
+- The MF-energy search acquired the exact start in 108,000/108,000 noisy frames and matched the oracle's
+  pass count at every integer offset with 0 discordant frames. The raw frame-energy search acquired only
+  41–43% of frames. For fractional offsets the integer search matched the best-integer oracle; its loss
+  relative to on-time sampling was 2.4–3.3 percentage points at Δ = 0.5, 0.75 and 1.5.
+
+### Changed
+- CI: `actions/checkout@v7` and `actions/setup-python@v7` (Node 24 runtime; replaces the deprecated
+  Node 20 majors). `tools/reproduce_all.sh` also regenerates the v6 artifacts, and CI compares them byte for byte.
+- README: v6 section and figure. Timing recovery moved from TARGET/UNRUN to done, with its easy-case caveats.
+  Carrier/I/Q recovery, clock drift and interpolating timing recovery remain TARGET.
+
+### Unchanged
+- The five original modules and their `MODULES.sha256` entries are byte-identical to v0.1.0.
+
 ## [0.1.0] - 2026-10-03
 
 ### Added

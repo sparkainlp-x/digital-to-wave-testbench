@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "digital-to-wave-testbench"
-version = "0.1.0"
-description = "Synthetic, dimensionless software testbench for the signed-amplitude sine encoding printed in Mun Seok Lee's 'Digital to Wave' preprint: seeded noise, phase, carrier-frequency-offset and integer timing-offset robustness benchmarks with Wilson intervals and closed-form calibration; no physical validity claimed"
+version = "0.2.0"
+description = "Synthetic, dimensionless software testbench for the signed-amplitude sine encoding printed in Mun Seok Lee's 'Digital to Wave' preprint: seeded noise, phase, carrier-frequency-offset and timing-offset robustness benchmarks and a blind timing-recovery baseline, with Wilson intervals and closed-form calibration; no physical validity claimed"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "AGPL-3.0-only"
 license-files = ["LICENSE"]
 authors = [{ name = "Jean-François Brisson" }]
-keywords = ["synthetic-data", "benchmark", "signal-processing", "matched-filter", "reproducibility", "timing-offset", "carrier-frequency-offset"]
+keywords = ["synthetic-data", "benchmark", "signal-processing", "matched-filter", "reproducibility", "timing-offset", "timing-recovery", "carrier-frequency-offset"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Programming Language :: Python :: 3",
