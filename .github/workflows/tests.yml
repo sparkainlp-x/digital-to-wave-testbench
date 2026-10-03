@@ -12,17 +12,17 @@ jobs:
       matrix:
         python-version: ["3.11", "3.12", "3.13"]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - run: python -m pip install --upgrade pip ruff
       - run: python -m pip install ".[test]"
-      - name: Hash-locked v1-v5 modules are unchanged
+      - name: Hash-locked v1-v5 modules and the locked v6 protocol module are unchanged
         run: sha256sum -c MODULES.sha256
       - name: Lint (tests and tools; locked modules excluded)
         run: ruff check .
-      - name: Tests (includes the full v3, v4 and v5 protocols)
+      - name: Tests (full v3, v4 and v5 protocols; reduced v6 runs with golden counts)
         run: python -m pytest
       - name: Committed CSV and PNG artifacts are reproduced byte for byte
         run: |
