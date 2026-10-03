@@ -6,8 +6,15 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-03
+
 ### Added
 - `robustness_benchmark_v7_clock_drift_cfo.py`: synthetic joint clock-drift/CFO sweep with nominal, oracle and blind joint-search receivers, paired comparisons, acquisition metrics, and reproducible JSON/CSV/PNG artifacts. The v7 protocol and module hash are fixed before the full run; v1-v6 remain unchanged.
+- `reports/v7-clock-drift-cfo-protocol-lock.md` (v7 conditions and lock history), `tests/test_v7_clock_drift_cfo.py`, and the v7 module hash in `MODULES.sha256`.
+
+### Notes
+- All v7 results are SYNTHETIC; no physical validity is claimed.
+- Disclosure: a first full-protocol v7 run (`8da0e5e`, generated from `5e1d272`) was superseded after the module was changed to report pooled blind-search acquisition and re-locked in `1625166`; the full protocol was re-run from `1625166`. All 1,701 result rows have identical pass counts and error statistics and the paired comparisons are byte-identical; only the 81 pooled blind-search rows gained acquisition fields. σ = 0.25 was added after the first protocol lock but before any results existed.
 
 ## [0.2.0] - 2026-10-03
 

@@ -1,6 +1,6 @@
 # Digital to Wave Testbench
 
-**A synthetic, dimensionless software testbench for the signed-amplitude sine encoding printed in Mun Seok Lee's *Digital to Wave* preprint**, with seeded robustness benchmarks for sample noise, carrier-phase mismatch, carrier-frequency offset and receiver timing offset, and a blind timing-recovery baseline (v6).
+**A synthetic, dimensionless software testbench for the signed-amplitude sine encoding printed in Mun Seok Lee's *Digital to Wave* preprint**, with seeded robustness benchmarks for sample noise, carrier-phase mismatch, carrier-frequency offset and receiver timing offset, a blind timing-recovery baseline (v6) and a joint clock-drift/CFO benchmark (v7).
 
 [![tests](https://github.com/sparkainlp-x/digital-to-wave-testbench/actions/workflows/tests.yml/badge.svg)](https://github.com/sparkainlp-x/digital-to-wave-testbench/actions/workflows/tests.yml)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](LICENSE)
@@ -41,7 +41,7 @@ Testbench choices: 64 samples and 4 carrier cycles per symbol (so the carrier ad
 | `robustness_benchmark_v4.py` | v4: continuous carrier-frequency offset (phase ramp over the frame) |
 | `robustness_benchmark_v5_timing.py` | v5: constant integer-sample receiver timing offset with 64-sample zero guards |
 | `robustness_benchmark_v6_timing_recovery.py` | v6 (new in 0.2.0): blind timing-recovery searches, fractional offsets, randomised vectors, clean ±32 sweep; imports v1–v5 unchanged |
-| `robustness_benchmark_v7_clock_drift_cfo.py` | v7: joint carrier-frequency offset and sample-clock drift with nominal, informed-oracle and blind grid-search receivers; imports v1–v6 unchanged |
+| `robustness_benchmark_v7_clock_drift_cfo.py` | v7 (new in 0.3.0): joint carrier-frequency offset and sample-clock drift with nominal, informed-oracle and blind grid-search receivers; imports v1–v6 unchanged |
 | `MODULES.sha256` | SHA-256 lock for v1–v7 benchmark modules; v7 is locked before its full run and checked by tests and CI |
 | `artifacts/` | generated JSON/CSV/PNG for v2–v7 and the timing diagnostic, plus `SHA256SUMS` |
 | `tools/` | `reproduce_all.sh`, `timing_phase_diagnostic.py` |

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "digital-to-wave-testbench"
-version = "0.2.0"
+version = "0.3.0"
 description = "Synthetic, dimensionless software testbench for the signed-amplitude sine encoding printed in Mun Seok Lee's 'Digital to Wave' preprint: seeded noise, phase, carrier-frequency-offset, timing-offset and joint clock-drift/CFO robustness benchmarks and a blind timing-recovery baseline, with Wilson intervals and closed-form calibration; no physical validity claimed"
 readme = "README.md"
 requires-python = ">=3.11"
