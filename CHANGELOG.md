@@ -6,6 +6,9 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+- `robustness_benchmark_v7_clock_drift_cfo.py`: synthetic joint clock-drift/CFO sweep with nominal, oracle and blind joint-search receivers, paired comparisons, acquisition metrics, and reproducible JSON/CSV/PNG artifacts. The v7 protocol and module hash are fixed before the full run; v1-v6 remain unchanged.
+
 ## [0.2.0] - 2026-10-03
 
 ### Added
