@@ -31,7 +31,7 @@ test = ["pytest==9.1.1"]
 Repository = "https://github.com/sparkainlp-x/digital-to-wave-testbench"
 
 [tool.setuptools]
-# The v1-v6 modules and v7 protocol module are hash-locked (MODULES.sha256), flat top-level modules.
+# The v1-v6 modules and v7/v8 protocol modules are hash-locked (MODULES.sha256), flat top-level modules.
 py-modules = [
     "digital_to_wave",
     "robustness_benchmark_v2",
@@ -40,6 +40,7 @@ py-modules = [
     "robustness_benchmark_v5_timing",
     "robustness_benchmark_v6_timing_recovery",
     "robustness_benchmark_v7_clock_drift_cfo",
+    "robustness_benchmark_v8_ml_sync",
 ]
 
 [tool.pytest.ini_options]

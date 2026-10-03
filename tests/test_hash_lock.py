@@ -1,4 +1,4 @@
-"""The original v1-v6 modules and v7 protocol module must stay byte-identical."""
+"""The original v1-v6 modules and the v7 and v8 protocol modules must stay byte-identical."""
 
 import hashlib
 from pathlib import Path
@@ -22,9 +22,13 @@ LOCKED_V6 = {
 LOCKED_V7 = {
     "robustness_benchmark_v7_clock_drift_cfo.py": "693ac18c9202f36a004610147f76642ae3f2859b64dd39e1d5c4a7f0cc6f7e84",
 }
+# v8 protocol module: committed and hash-locked before the full v8 run (reports/v8-ml-sync-protocol-lock.md).
+LOCKED_V8 = {
+    "robustness_benchmark_v8_ml_sync.py": "77422f5f5d430749d911d05ecd678c08b73e51c7b7fd38d10aec56958570b9cf",
+}
 
 
-@pytest.mark.parametrize("name,digest", sorted({**LOCKED, **LOCKED_V6, **LOCKED_V7}.items()))
+@pytest.mark.parametrize("name,digest", sorted({**LOCKED, **LOCKED_V6, **LOCKED_V7, **LOCKED_V8}.items()))
 def test_module_sha256_matches_lock(name, digest):
     assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest
 
@@ -36,7 +40,7 @@ def test_lock_file_agrees_with_test_table():
         if line.strip():
             digest, name = line.split()
             table[name] = digest
-    assert table == {**LOCKED, **LOCKED_V6, **LOCKED_V7}
+    assert table == {**LOCKED, **LOCKED_V6, **LOCKED_V7, **LOCKED_V8}
 
 
 def test_artifact_checksums_file_is_consistent():

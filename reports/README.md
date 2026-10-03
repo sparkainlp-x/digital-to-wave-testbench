@@ -7,6 +7,7 @@ re-run and reproduced for v0.1.0 (see the main README, *Reproduction*).
 |---|---|
 | [`v6-timing-recovery-protocol-lock.md`](v6-timing-recovery-protocol-lock.md) | v6 blind timing-recovery conditions, committed before the full v6 run (written for v0.2.0; protocol only) |
 | [`v7-clock-drift-cfo-protocol-lock.md`](v7-clock-drift-cfo-protocol-lock.md) | v7 joint clock-drift/CFO conditions, committed before the full v7 run (protocol only) |
+| [`v8-ml-sync-protocol-lock.md`](v8-ml-sync-protocol-lock.md) | v7 weak-cell diagnosis and v8 blind-synchronization protocol, committed before the full v8 run (protocol only) |
 | [`v5-timing-protocol-lock.md`](v5-timing-protocol-lock.md) | v5 conditions fixed before the full run (verbatim; the runner hash matches `MODULES.sha256`) |
 | [`benchmark-v5-timing-report.pdf`](benchmark-v5-timing-report.pdf) | v5 integer-sample timing-offset report |
 | [`benchmark-v4-cfo-report.pdf`](benchmark-v4-cfo-report.pdf) | v4 continuous carrier-frequency-offset report |
