@@ -6,6 +6,15 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-10-04
+
+Documentation and metadata only. No code, module, artifact or test changes; `MODULES.sha256` is unchanged and all results are byte-identical to v0.4.0.
+
+### Changed
+- Cite Mun Seok Lee's *Digital to Wave* Part II, *Digital to Wave: LGD In Situ Wave Memory-Human Wave Integrated Interface-Metaverse Hologram- Wave Affective AI* (doi:10.5281/zenodo.21947108), for context only, in the README, CITATION.cff and .zenodo.json. It does not contain the encoding equation, and none of it is modelled here.
+- Complete the Part I citation metadata in CITATION.cff: `status: preprint`, Lee's ORCID (0009-0003-6627-8507), publisher Zenodo, licence CC BY 4.0 and the all-versions DOI 10.5281/zenodo.21464222. In .zenodo.json, add the Part I all-versions DOI (`isDerivedFrom`), the Part II DOI (`references`) and full reference strings.
+- Add the keywords "Digital to Wave", "signed-amplitude sine encoding" and "software testbench". Version 0.4.1.
+
 ## [0.4.0] - 2026-10-03
 
 ### Added

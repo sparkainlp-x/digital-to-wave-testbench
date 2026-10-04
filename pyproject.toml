@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "digital-to-wave-testbench"
-version = "0.4.0"
+version = "0.4.1"
 description = "Synthetic, dimensionless software testbench for the signed-amplitude sine encoding printed in Mun Seok Lee's 'Digital to Wave' preprint: seeded noise, phase, carrier-frequency-offset, timing-offset and joint clock-drift/CFO robustness benchmarks, a blind timing-recovery baseline and a maximum-likelihood coarse-to-fine blind synchronizer, with Wilson intervals and closed-form calibration; no physical validity claimed"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "AGPL-3.0-only"
 license-files = ["LICENSE"]
 authors = [{ name = "Jean-François Brisson" }]
-keywords = ["synthetic-data", "benchmark", "signal-processing", "matched-filter", "reproducibility", "timing-offset", "timing-recovery", "clock-drift", "carrier-frequency-offset", "synchronization", "maximum-likelihood"]
+keywords = ["synthetic-data", "benchmark", "signal-processing", "matched-filter", "reproducibility", "timing-offset", "timing-recovery", "clock-drift", "carrier-frequency-offset", "synchronization", "maximum-likelihood", "digital-to-wave", "signed-amplitude-sine-encoding", "software-testbench"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Programming Language :: Python :: 3",
