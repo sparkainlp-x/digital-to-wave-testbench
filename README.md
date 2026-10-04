@@ -29,6 +29,10 @@ The encoder in [`digital_to_wave.py`](digital_to_wave.py) implements the signed-
 
 The module docstring calls the file `DigitaltoWave-1.pdf`; that file is byte-identical (MD5 `658ba723…`) to the `Digital to Wave-1.pdf` deposited in Zenodo record 21947036, so the page reference is to that version. No text or figures from the preprint are redistributed here.
 
+Part I belongs to a two-part series. Part II, *Digital to Wave: LGD In Situ Wave Memory-Human Wave Integrated Interface-Metaverse Hologram- Wave Affective AI* (doi:10.5281/zenodo.21947108), extends the paradigm to lab-grown-diamond memory, THz human-wave interfaces, real-space holography and wave affective AI. It is cited here for context only. It does not contain the encoding equation, and none of it is modelled in this repository:
+
+> Lee, Mun Seok (2026). *Digital to Wave: LGD In Situ Wave Memory-Human Wave Integrated Interface-Metaverse Hologram- Wave Affective AI.* Preprint (Part II; patent pending), Zenodo. https://doi.org/10.5281/zenodo.21947108 (all versions: [10.5281/zenodo.21947107](https://doi.org/10.5281/zenodo.21947107)). CC BY 4.0.
+
 Testbench choices: 64 samples and 4 carrier cycles per symbol (so the carrier advances **22.5° per sample**), `A_min = 1`, inputs in `[-2, 2]`, 32 values per frame, and a least-squares projection onto `sin(ωn + π/4)` as the decoder.
 
 ## Layout
@@ -227,7 +231,7 @@ Pooled pass shares follow the closed-form prediction across ten noise levels, e.
 
 ## Citation
 
-See [CITATION.cff](CITATION.cff); GitHub shows a "Cite this repository" button. Releases are archived on Zenodo under the concept DOI [10.5281/zenodo.23122876](https://doi.org/10.5281/zenodo.23122876), which covers all versions. Each release also gets its own version DOI: v0.4.0 is [10.5281/zenodo.23127940](https://doi.org/10.5281/zenodo.23127940), v0.3.0 is [10.5281/zenodo.23127448](https://doi.org/10.5281/zenodo.23127448) and v0.2.0 is [10.5281/zenodo.23122877](https://doi.org/10.5281/zenodo.23122877). Cite a version DOI when you need to refer to exact code. (v0.1.0 was released before Zenodo archiving was enabled and has no DOI.) Please also cite the source preprint (above) when you refer to the encoding equation.
+See [CITATION.cff](CITATION.cff); GitHub shows a "Cite this repository" button. Releases are archived on Zenodo under the concept DOI [10.5281/zenodo.23122876](https://doi.org/10.5281/zenodo.23122876), which covers all versions. Each release also gets its own version DOI: v0.4.0 is [10.5281/zenodo.23127940](https://doi.org/10.5281/zenodo.23127940), v0.3.0 is [10.5281/zenodo.23127448](https://doi.org/10.5281/zenodo.23127448) and v0.2.0 is [10.5281/zenodo.23122877](https://doi.org/10.5281/zenodo.23122877). Cite a version DOI when you need to refer to exact code. (v0.1.0 was released before Zenodo archiving was enabled and has no DOI.) Please also cite the source preprint (Part I, above) when you refer to the encoding equation.
 
 ## License
 

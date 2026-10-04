@@ -66,13 +66,38 @@ keywords:
   - reproducibility
   - wilson-interval
   - scientific-software
+  - Digital to Wave
+  - signed-amplitude sine encoding
+  - software testbench
 references:
   - type: article
+    status: preprint
     title: "Digital to Wave: Paradigm Shift in Quantum Wave-Based Computing and Lab-Grown Diamond Memory"
     authors:
       - family-names: "Lee"
         given-names: "Mun Seok"
+        orcid: "https://orcid.org/0009-0003-6627-8507"
     year: 2026
+    date-published: "2026-08-15"
+    publisher:
+      name: "Zenodo"
     doi: "10.5281/zenodo.21947036"
     url: "https://doi.org/10.5281/zenodo.21947036"
-    notes: "Preprint (Zenodo). Source of the signed-amplitude sine equation (p. 12). Concept DOI 10.5281/zenodo.21464222."
+    license: CC-BY-4.0
+    notes: "Part I. Source of the signed-amplitude sine equation (p. 12) implemented by this testbench. Concept DOI 10.5281/zenodo.21464222."
+  - type: article
+    status: preprint
+    title: "Digital to Wave: LGD In Situ Wave Memory-Human Wave Integrated Interface-Metaverse Hologram- Wave Affective AI"
+    authors:
+      - family-names: "Lee"
+        given-names: "Mun Seok"
+        orcid: "https://orcid.org/0009-0003-6627-8507"
+        affiliation: "Independent researcher"
+    year: 2026
+    date-published: "2026-08-15"
+    publisher:
+      name: "Zenodo"
+    doi: "10.5281/zenodo.21947108"
+    url: "https://doi.org/10.5281/zenodo.21947108"
+    license: CC-BY-4.0
+    notes: "Part II (follow-up to Part I; patent pending). Cited for context only: it does not contain the encoding equation, and nothing in it (LGD memory, human-wave interface, THz holography, Wave Affective AI) is modelled by this testbench. Concept DOI 10.5281/zenodo.21947107."
