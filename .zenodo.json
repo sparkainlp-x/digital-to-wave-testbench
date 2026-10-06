@@ -62,5 +62,10 @@
     "Lee, M. S. (2026). Digital to Wave: Paradigm Shift in Quantum Wave-Based Computing and Lab-Grown Diamond Memory [Preprint]. Zenodo. https://doi.org/10.5281/zenodo.21947036 (all versions: https://doi.org/10.5281/zenodo.21464222). CC BY 4.0.",
     "Lee, M. S. (2026). Digital to Wave: LGD In Situ Wave Memory-Human Wave Integrated Interface-Metaverse Hologram- Wave Affective AI [Preprint, Part II; patent pending]. Zenodo. https://doi.org/10.5281/zenodo.21947108 (all versions: https://doi.org/10.5281/zenodo.21947107). CC BY 4.0."
   ],
-  "notes": "Evidence status: all results are SYNTHETIC (dimensionless software model); report numbers were re-run and reproduced. No physical validity is claimed. The cited preprint (Lee, Mun Seok, 2026, CC BY 4.0) is the source of the encoding equation only; its author has not reviewed or endorsed this software. Commercial licensing: see COMMERCIAL-LICENSE.md."
+  "notes": "Evidence status: all results are SYNTHETIC (dimensionless software model); report numbers were re-run and reproduced. No physical validity is claimed. The cited preprint (Lee, Mun Seok, 2026, CC BY 4.0) is the source of the encoding equation only; its author has not reviewed or endorsed this software. Commercial licensing: see COMMERCIAL-LICENSE.md.",
+  "communities": [
+    {
+      "identifier": "spark-ai-nlp"
+    }
+  ]
 }
