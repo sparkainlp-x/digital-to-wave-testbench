@@ -6,6 +6,13 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+- `perturbation_passport.py`: a deterministic v8 artifact summarizer that verifies aggregate counts and emits a provenance-linked JSON passport plus a Markdown report with the tested perturbation grid, assumptions, receiver outcomes, and weakest observed noisy cells. It describes only the synthetic, dimensionless benchmark and makes no physical-validity claim.
+- `tests/test_perturbation_passport.py` and the generated `artifacts/perturbation-passport-v8-ml-sync.json` / `reports/perturbation-passport-v8-ml-sync.md` outputs.
+
+### Changed
+- `tools/reproduce_all.sh` now regenerates the passport after the benchmark artifacts; CI continues to preserve the committed v8 run with `SKIP_V8=1`.
+
 ## [0.4.1] - 2026-10-04
 
 Documentation and metadata only. No code, module, artifact or test changes; `MODULES.sha256` is unchanged and all results are byte-identical to v0.4.0.

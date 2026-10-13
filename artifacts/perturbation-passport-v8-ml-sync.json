@@ -1,0 +1,274 @@
+{
+  "schema": "digital-to-wave-perturbation-passport/1.0",
+  "title": "Perturbation Passport \u2014 v8 blind synchronization",
+  "evidence_label": "SYNTHETIC",
+  "classification": "synthetic dimensionless benchmark; no physical validity claimed",
+  "physical_validity_claimed": false,
+  "source": {
+    "benchmark": "synthetic_ml_sync_refinement_v8",
+    "artifact": "robustness-benchmark-v8-ml-sync.json",
+    "artifact_sha256": "b169a7641f285879d1440e52c0e8ff9185f8fc31a03e85b174ae4999b0e9f3c8",
+    "protocol_status": "exploratory v8 protocol locked before the full run; not formal preregistration",
+    "protocol_lock": "reports/v8-ml-sync-protocol-lock.md",
+    "git_commit": "ba0143e55f99b3a508082f81f9174cf9dec54f02",
+    "full_protocol_run": true,
+    "master_seed": 20261011,
+    "vector_seed": 20261004,
+    "module_sha256": {
+      "digital_to_wave.py": "866cab09ae3b64387de9fc9909288dac37f9f81e7e2f6603b2e786674d46ac18",
+      "robustness_benchmark_v2.py": "dc3a1166c873892c9b861248b53037217c361e8939b48b96d5de3fc7c00e5c0f",
+      "robustness_benchmark_v3.py": "ec8c9d7a9e1aac1b807a3d577ba7254781e32fc6f6895cea6555ac14270d6222",
+      "robustness_benchmark_v4.py": "248c7672d310df2c06cf2fbbdb6d4de11090d849b5f05b7c4510f5a60da181e6",
+      "robustness_benchmark_v5_timing.py": "1bd9500ce3ceadadae25ce6731bc8ea9058adefa2781adf4d16d403b6c383419",
+      "robustness_benchmark_v6_timing_recovery.py": "c3f2da47e9da81072cbdc02153c28f6c9b6f5958251a4c91f8d64f9e5cfa112b",
+      "robustness_benchmark_v7_clock_drift_cfo.py": "693ac18c9202f36a004610147f76642ae3f2859b64dd39e1d5c4a7f0cc6f7e84",
+      "robustness_benchmark_v8_ml_sync.py": "77422f5f5d430749d911d05ecd678c08b73e51c7b7fd38d10aec56958570b9cf"
+    },
+    "passport_generator": "perturbation_passport.py",
+    "passport_generator_sha256": "9f5e0218c56dc78e1a80ce751ab6da950da9b7a58f84e085ae90dd481e0a5faa"
+  },
+  "experiment": {
+    "perturbation_axes": [
+      {
+        "name": "carrier-frequency offset",
+        "field": "cfo_cycles_per_symbol",
+        "unit": "cycles/symbol",
+        "tested_values": [
+          -0.01,
+          -0.005,
+          0.0,
+          0.005,
+          0.01
+        ]
+      },
+      {
+        "name": "sample-clock error",
+        "field": "clock_error_ppm",
+        "unit": "ppm",
+        "tested_values": [
+          -5000.0,
+          -2500.0,
+          -1250.0,
+          0.0,
+          1250.0,
+          2500.0,
+          5000.0
+        ]
+      },
+      {
+        "name": "receiver timing offset",
+        "field": "timing_offset_samples",
+        "unit": "samples",
+        "tested_values": [
+          -2.0,
+          0.0,
+          2.0
+        ]
+      }
+    ],
+    "sample_noise_std": [
+      0.0,
+      0.25,
+      0.45
+    ],
+    "declared_condition_cells": 105,
+    "observed_max_noise_cells": 105,
+    "trials_per_vector_at_positive_noise": 200,
+    "vector_patterns": [
+      "boundary_values",
+      "mixed_signs",
+      "randomized_1",
+      "randomized_2",
+      "randomized_3",
+      "sparse_and_zeros"
+    ],
+    "vector_count": 6,
+    "vector_seed": 20261004,
+    "frame_pass_rule": "max absolute decoded-value error across 32 values <= 0.25",
+    "signal_model": "unchanged v7 received_buffer: t=(m-guard)*(1+clock_error_ppm*1e-6)+timing_offset",
+    "noise_model": "For positive noise_std, independent zero-mean Gaussian samples with the declared standard deviation are added to each generated buffer; every receiver is scored on the same noisy buffer.",
+    "receiver_definitions": {
+      "nominal": "unchanged decode_wave with fixed windows and no correction",
+      "oracle": "v7 oracle: exact impairments, linear resampling and least-squares carrier projection",
+      "oracle_raw_ls": "informed reference for the v8 decoder: exact impairments, raw-sample least-squares fit",
+      "v7_blind_joint_search": "unchanged v7 blind_joint_search (125-point grid, sum of squared decoded values)",
+      "v8_ml_refined_search": "GLRT metric, v7 coarse grid, top-3 coarse-to-fine ridge-coordinate refinement, raw LS decoder"
+    }
+  },
+  "assumptions_and_limitations": [
+    "synthetic model only; no physical claim",
+    "known frame and symbol lengths, known waveform family and noise-only guards",
+    "static CFO and clock error, linear interpolation, no pulse shaping, jitter, filtering or time-varying impairments",
+    "blind searches are bounded by the declared envelope; the oracle is informed of impairments",
+    "integer timing offsets only in the impairment grid"
+  ],
+  "outcomes_by_noise": [
+    {
+      "noise_std": 0.25,
+      "cells": 105,
+      "frames": 126000,
+      "receivers": {
+        "v8_ml_refined_search": {
+          "cells": 105,
+          "frames": 126000,
+          "frames_passing": 126000,
+          "pass_share": 1.0,
+          "wilson95": [
+            0.9999695131610574,
+            0.9999999999999999
+          ]
+        },
+        "v7_blind_joint_search": {
+          "cells": 105,
+          "frames": 126000,
+          "frames_passing": 122631,
+          "pass_share": 0.9732619047619048,
+          "wilson95": [
+            0.9723566497224023,
+            0.9741383032824709
+          ]
+        },
+        "oracle_raw_ls": {
+          "cells": 105,
+          "frames": 126000,
+          "frames_passing": 126000,
+          "pass_share": 1.0,
+          "wilson95": [
+            0.9999695131610574,
+            0.9999999999999999
+          ]
+        }
+      },
+      "paired_v8_vs_v7": {
+        "frames_v8_pass_v7_fail": 3369,
+        "frames_v8_fail_v7_pass": 0,
+        "mcnemar_exact_two_sided_p": 0.0
+      }
+    },
+    {
+      "noise_std": 0.45,
+      "cells": 105,
+      "frames": 126000,
+      "receivers": {
+        "v8_ml_refined_search": {
+          "cells": 105,
+          "frames": 126000,
+          "frames_passing": 119273,
+          "pass_share": 0.9466111111111111,
+          "wilson95": [
+            0.9453561473048971,
+            0.9478388433952961
+          ]
+        },
+        "v7_blind_joint_search": {
+          "cells": 105,
+          "frames": 126000,
+          "frames_passing": 109753,
+          "pass_share": 0.8710555555555556,
+          "wilson95": [
+            0.8691937455072879,
+            0.8728947409819013
+          ]
+        },
+        "oracle_raw_ls": {
+          "cells": 105,
+          "frames": 126000,
+          "frames_passing": 119310,
+          "pass_share": 0.9469047619047619,
+          "wilson95": [
+            0.9456530152157573,
+            0.9481292591667688
+          ]
+        }
+      },
+      "paired_v8_vs_v7": {
+        "frames_v8_pass_v7_fail": 11001,
+        "frames_v8_fail_v7_pass": 1481,
+        "mcnemar_exact_two_sided_p": 0.0
+      }
+    }
+  ],
+  "weak_cell": {
+    "condition": {
+      "cfo_cycles_per_symbol": 0.0,
+      "clock_error_ppm": -2500.0,
+      "timing_offset_samples": 2.0,
+      "noise_std": 0.45
+    },
+    "frames": 1200,
+    "v8_frames_passing": 1150,
+    "v8_pass_share": 0.9583333333333334,
+    "v7_frames_passing": 1034,
+    "v7_pass_share": 0.8616666666666667,
+    "v8_joint_acq_loose_frames": 1199,
+    "v7_joint_acq_loose_frames": 528,
+    "paired": {
+      "cfo_cycles_per_symbol": 0.0,
+      "clock_error_ppm": -2500.0,
+      "timing_offset_samples": 2.0,
+      "noise_std": 0.45,
+      "vector_pattern": "POOLED_ALL_VECTORS",
+      "in_v7_grid": true,
+      "method_a": "v8_ml_refined_search",
+      "method_b": "v7_blind_joint_search",
+      "frames": 1200,
+      "a_pass_b_fail": 132,
+      "a_fail_b_pass": 16,
+      "mcnemar_exact_two_sided_p": 6.952852160091013e-24
+    }
+  },
+  "observed_failure_boundary": {
+    "definition": "The lowest empirical pooled pass-share cell among the discrete conditions tested at the highest declared noise_std; no interpolation or extrapolation is performed.",
+    "maximum_tested_noise_std": 0.45,
+    "cells_tested": 105,
+    "cells_with_at_least_one_failed_frame": 105,
+    "minimum_observed_pass_share": 0.9291666666666667,
+    "weakest_observed_cells": [
+      {
+        "cfo_cycles_per_symbol": 0.005,
+        "clock_error_ppm": 2500.0,
+        "timing_offset_samples": 0.0,
+        "frames_passing": 1115,
+        "frames": 1200,
+        "pass_share": 0.9291666666666667
+      },
+      {
+        "cfo_cycles_per_symbol": -0.01,
+        "clock_error_ppm": 1250.0,
+        "timing_offset_samples": -2.0,
+        "frames_passing": 1119,
+        "frames": 1200,
+        "pass_share": 0.9325
+      },
+      {
+        "cfo_cycles_per_symbol": -0.005,
+        "clock_error_ppm": 0.0,
+        "timing_offset_samples": -2.0,
+        "frames_passing": 1120,
+        "frames": 1200,
+        "pass_share": 0.9333333333333333
+      }
+    ],
+    "outside_tested_grid": "Untested; no claim is made outside the finite grid above."
+  },
+  "pre_stated_criteria": {
+    "evaluated_on_full_protocol_grid": true,
+    "improvement_real": true,
+    "S1_weak_cell": {
+      "rule": "v8 loose joint acquisition >= 95% and v8 passes more frames than v7 blind, McNemar p < 0.01",
+      "pass": true
+    },
+    "S2_no_v7_grid_regression": {
+      "rule": "no noisy v7-grid cell where v8 is significantly worse than v7 blind (unadjusted p < 0.05)",
+      "pass": true
+    },
+    "S3_not_worse_than_v7_oracle_on_v7_grid": {
+      "rule": "no noisy v7-grid cell where v8 is significantly worse than the v7 oracle (unadjusted p < 0.05)",
+      "pass": true
+    },
+    "S4_extension_gain": {
+      "rule": "on extension cells, pooled per noise level, v8 passes more frames than v7 blind with McNemar p < 0.05",
+      "pass": true
+    }
+  }
+}

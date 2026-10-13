@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Regenerate every committed artifact (v2-v8 JSON/CSV/PNG, timing diagnostic) and SHA256SUMS.
+# Regenerate every committed artifact (v2-v8 JSON/CSV/PNG, timing diagnostic, Perturbation Passport) and SHA256SUMS.
 # Runtime: about 4.5 min on a laptop without v8 (v7 alone is about 3 min, v6 about 70 s); v8 adds about 6 min on
 # 8 cores (about 27 CPU-minutes; cells run in parallel and results do not depend on the worker count).
 # Set SKIP_V8=1 to keep the committed v8 artifacts (CI does this: a full v8 re-run would exceed its time budget, so
@@ -22,5 +22,6 @@ else
   echo "SKIP_V8=1: keeping the committed v8 artifacts"
 fi
 "$PY" tools/timing_phase_diagnostic.py
+"$PY" perturbation_passport.py
 (cd artifacts && sha256sum -- *.csv *.json *.png > SHA256SUMS)
 echo "wrote artifacts/SHA256SUMS"

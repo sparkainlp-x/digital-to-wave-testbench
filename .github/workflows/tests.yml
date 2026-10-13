@@ -22,9 +22,9 @@ jobs:
         run: sha256sum -c MODULES.sha256
       - name: Lint (tests and tools; locked modules excluded)
         run: ruff check .
-      - name: Tests (full v3, v4 and v5 protocols; reduced v6-v8 runs; two full-size v8 cells vs committed rows)
+      - name: Tests (full v3-v5 protocols; reduced v6-v8 runs; v8 full-size spot checks; Perturbation Passport validation)
         run: python -m pytest
-      - name: Committed v2-v7 CSV and PNG artifacts are reproduced byte for byte (v8 spot-checked in tests)
+      - name: Committed CSV and PNG artifacts are reproduced byte for byte (v8 spot-checked; passport regenerated)
         run: |
           cp -r artifacts "$RUNNER_TEMP/committed"
           SKIP_V8=1 tools/reproduce_all.sh

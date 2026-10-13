@@ -5,13 +5,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "digital-to-wave-testbench"
 version = "0.4.2"
-description = "Synthetic, dimensionless software testbench for the signed-amplitude sine encoding printed in Mun Seok Lee's 'Digital to Wave' preprint: seeded noise, phase, carrier-frequency-offset, timing-offset and joint clock-drift/CFO robustness benchmarks, a blind timing-recovery baseline and a maximum-likelihood coarse-to-fine blind synchronizer, with Wilson intervals and closed-form calibration; no physical validity claimed"
+description = "Synthetic, dimensionless software testbench for the signed-amplitude sine encoding printed in Mun Seok Lee's 'Digital to Wave' preprint: seeded perturbation benchmarks, blind synchronization, and a reproducible Perturbation Passport; no physical validity claimed"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "AGPL-3.0-only"
 license-files = ["LICENSE"]
 authors = [{ name = "Jean-François Brisson" }]
-keywords = ["synthetic-data", "benchmark", "signal-processing", "matched-filter", "reproducibility", "timing-offset", "timing-recovery", "clock-drift", "carrier-frequency-offset", "synchronization", "maximum-likelihood", "digital-to-wave", "signed-amplitude-sine-encoding", "software-testbench"]
+keywords = ["synthetic-data", "benchmark", "signal-processing", "matched-filter", "reproducibility", "timing-offset", "timing-recovery", "clock-drift", "carrier-frequency-offset", "synchronization", "maximum-likelihood", "perturbation-passport", "digital-to-wave", "signed-amplitude-sine-encoding", "software-testbench"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Programming Language :: Python :: 3",
@@ -41,6 +41,7 @@ py-modules = [
     "robustness_benchmark_v6_timing_recovery",
     "robustness_benchmark_v7_clock_drift_cfo",
     "robustness_benchmark_v8_ml_sync",
+    "perturbation_passport",
 ]
 
 [tool.pytest.ini_options]

@@ -47,8 +47,9 @@ Testbench choices: 64 samples and 4 carrier cycles per symbol (so the carrier ad
 | `robustness_benchmark_v6_timing_recovery.py` | v6 (new in 0.2.0): blind timing-recovery searches, fractional offsets, randomised vectors, clean ±32 sweep; imports v1–v5 unchanged |
 | `robustness_benchmark_v7_clock_drift_cfo.py` | v7 (new in 0.3.0): joint carrier-frequency offset and sample-clock drift with nominal, informed-oracle and blind grid-search receivers; imports v1–v6 unchanged |
 | `robustness_benchmark_v8_ml_sync.py` | v8 (new in 0.4.0): blind joint synchronization with a raw-sample GLRT metric, coarse-to-fine ridge-coordinate refinement and a raw least-squares decoder, compared with the v7 blind search and two informed oracles; imports v1–v7 unchanged |
+| `perturbation_passport.py` | Additive report generator: validates the v8 result structure and creates a provenance-linked JSON/Markdown summary of the tested perturbations, outcomes and weakest observed grid cells; does not alter or extend the signal model |
 | `MODULES.sha256` | SHA-256 lock for v1–v8 benchmark modules; v7 and v8 were locked before their full runs; checked by tests and CI |
-| `artifacts/` | generated JSON/CSV/PNG for v2–v8 and the timing diagnostic, plus `SHA256SUMS` |
+| `artifacts/` | generated JSON/CSV/PNG for v2–v8 and the timing diagnostic, plus the machine-readable passport and `SHA256SUMS` |
 | `tools/` | `reproduce_all.sh`, `timing_phase_diagnostic.py`, `v7_weak_cell_diagnostic.py` (v8 development-seed diagnosis) |
 | `reports/` | v5–v8 protocol locks, v4 and v5 report PDFs (REPORTED) |
 | `tests/` | pytest suite |
@@ -66,6 +67,7 @@ python -m pip install -e ".[test]"        # Python 3.11–3.13; numpy==2.4.6, ma
 python robustness_benchmark_v6_timing_recovery.py  # ~65 s; prints the v6 tables and rewrites artifacts/*v6*
 python robustness_benchmark_v7_clock_drift_cfo.py  # ~3 min; prints v7 summary lines and rewrites artifacts/*v7*
 python robustness_benchmark_v8_ml_sync.py          # ~6 min on 8 cores; prints the v8 weak cell and criteria, rewrites artifacts/*v8*
+python perturbation_passport.py                    # validates v8 JSON; writes a provenance-linked JSON passport and reports/ Markdown summary
 python robustness_benchmark_v5_timing.py   # ~7 s; prints the v5 table and rewrites artifacts/*v5*
 tools/reproduce_all.sh                     # ~10 min; regenerates every artifact and artifacts/SHA256SUMS (SKIP_V8=1: ~4.5 min)
 python -m pytest                           # ~1 min; full v3-v5 protocols, reduced v6-v8 runs, two full-size v8 cells
@@ -91,6 +93,10 @@ start, est = v6.matched_filter_energy_search(buf)              # blind: start ==
 ## Results
 
 All results are **SYNTHETIC**: six fixed 32-value vectors (three structured, three seeded random with seed `20261004`), pass iff max |error| ≤ 0.25, 95% Wilson intervals conditional on this fixed panel and the IID noise draws. They quantify Monte Carlo variation only, not model or physical uncertainty.
+
+### Perturbation Passport (new)
+
+[`perturbation_passport.py`](perturbation_passport.py) packages the existing v8 results into a compact JSON passport and readable [Markdown report](reports/perturbation-passport-v8-ml-sync.md). It records the source artifact's SHA-256, seeds, commit and module hashes; the tested CFO, clock-error, timing and noise grids; aggregate v8/v7/raw-LS-oracle outcomes; the pre-identified weak cell; and the lowest-performing observed cells at the highest tested noise. Its validator cross-checks pooled result counts against the benchmark summary before writing. The report describes only the finite synthetic grid: it does not interpolate across conditions or claim biological, hardware, physical-channel or preprint validation. The JSON output is included in `artifacts/SHA256SUMS`.
 
 ### v8 blind synchronization: GLRT metric + coarse-to-fine refinement (seed 20261011; new in v0.4.0)
 
