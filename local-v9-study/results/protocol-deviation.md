@@ -1,0 +1,13 @@
+# Protocol deviation note — reduced-test seed overlap
+
+A final source audit found that `test_reduced_study_is_paired_cluster_aware_and_deterministic` does not use fully separate input seeds from the full run, contrary to the frozen protocol’s statement that reduced tests use distinct seeds.
+
+The test keeps the first two payload families, the first two channel-seed indices, and two frames. Payload generation uses `[payload_seed, family_index, channel_index, frame_index]` and does not include the condition index. Therefore the test creates the same payload vectors as the full run for those first 2 × 2 × 2 payload coordinates, across the selected conditions.
+
+The reduced test selects full-design condition-list positions 0, 4, 6, and 7 (clean, frequency-selective filter, time-varying CFO/clock, composite). `run_study` then enumerates the reduced list locally as condition indices 0, 1, 2, and 3 when constructing channel RNG seeds. Consequently, the clean condition uses the same full-run channel seed coordinate 0, but it has no stochastic channel noise. The filtered and time-varying conditions are also noise-free. The composite condition uses reduced channel-seed condition coordinate 3, which is the full-run coordinate for a different condition; moreover, its extra AR-noise draws change subsequent RNG consumption. It therefore does not reproduce the full-run composite channel buffer. This is condition-index remapping and seed-coordinate overlap, not wholesale reuse of the selected full-run noisy channel realizations.
+
+The `master_seed` field is metadata. Actual generator and interval streams use the separately declared `payload_seed`, `channel_seed`, and `bootstrap_seed` fields.
+
+The reduced test compares deterministic outputs and checks shapes, pairing, hashes, and interval bounds. It does not assert or display receiver pass performance, and no performance result from the reduced test was used to choose or change the full-run conditions, sample sizes, methods, tolerances, or analysis. The full-run implementation/configuration remained hash-locked before execution, and the numerical outputs have not been changed or rerun.
+
+The appropriate characterization is **a locally frozen, exploratory synthetic study with a disclosed reduced-test payload-seed overlap and channel condition-index remapping**—not a pristine independently seeded preregistration. For a future confirmatory replication, assign reduced tests seed values disjoint from all full-run payload and channel coordinates, preserve stable condition identifiers rather than re-enumerating subsets, freeze those changes, and run the confirmatory evaluation on a fresh seed set.

@@ -1,0 +1,19 @@
+{
+  "lock_status": "frozen_before_full_run",
+  "frozen_at_utc": "2026-10-15T04:08:45.977966+00:00",
+  "base_repository_commit": "17a848c05c2e4a168ac12525f5a8ca4000dff098",
+  "source_sha256": {
+    "README.md": "7a1ed75e958e57026fe31add2709188830ea71ebf857326d4fde92c29f2083f4",
+    "NOTICE.md": "6f0ef1293a36343ca9664b688dbfbb51abe20301ab6c01dfedad78df94d17c84",
+    "protocol-lock.md": "a73ccda87c4da835b85f3af976e35bba085a7824ffa5977aeaf5b1f2e315adb2",
+    "study_config.json": "87544049c97662540a5c0c2393891a12e95e16435e7830c662fe24bd45c19f03",
+    "study.py": "ed5a25935def65024c18099fff7b6a714ad4fb97c0c40339e6f344c2afd751e4",
+    "tests/test_study.py": "367bb0e1d5ef8fbac182ad7e1e700c678399986dd50fbcafc712b3a37e8beb1e",
+    "compat/digital_to_wave.py": "866cab09ae3b64387de9fc9909288dac37f9f81e7e2f6603b2e786674d46ac18",
+    "compat/robustness_benchmark_v2.py": "dc3a1166c873892c9b861248b53037217c361e8939b48b96d5de3fc7c00e5c0f",
+    "compat/robustness_benchmark_v7_clock_drift_cfo.py": "693ac18c9202f36a004610147f76642ae3f2859b64dd39e1d5c4a7f0cc6f7e84",
+    "compat/robustness_benchmark_v8_ml_sync.py": "77422f5f5d430749d911d05ecd678c08b73e51c7b7fd38d10aec56958570b9cf"
+  },
+  "full_run_master_seed": 20261015,
+  "publication_status": "local_only_unpublished"
+}
