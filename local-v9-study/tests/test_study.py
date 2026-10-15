@@ -1,12 +1,13 @@
 import copy
-from pathlib import Path
+import importlib
 import sys
+from pathlib import Path
 
 import numpy as np
 
 HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE))
-import study
+study = importlib.import_module("study")
 
 
 def test_all_payload_families_are_finite_bounded_and_distinct_from_v2_panel():

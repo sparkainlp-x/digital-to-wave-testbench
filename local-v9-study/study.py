@@ -19,7 +19,7 @@ import resource
 import subprocess
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -376,11 +376,21 @@ def run_study(config: dict[str, Any] | None = None, *, write_outputs: bool = Fal
         name = str(condition["name"])
         truth = (float(condition["timing_samples"]), float(condition["clock_ppm"]),
                  float(condition["cfo_cycles_per_symbol"]))
-        outcomes: dict[str, np.ndarray] = {m: np.zeros((n_clusters, frames_per_cluster), dtype=bool) for m in methods}
-        loose: dict[str, np.ndarray] = {m: np.zeros((n_clusters, frames_per_cluster), dtype=bool) for m in BLIND_METHODS}
-        strict: dict[str, np.ndarray] = {m: np.zeros((n_clusters, frames_per_cluster), dtype=bool) for m in BLIND_METHODS}
-        abs_sync: dict[str, np.ndarray] = {m: np.zeros((n_clusters, frames_per_cluster, 3), dtype=float) for m in BLIND_METHODS}
-        abs_error_mean: dict[str, np.ndarray] = {m: np.zeros((n_clusters, frames_per_cluster), dtype=float) for m in methods}
+        outcomes: dict[str, np.ndarray] = {
+            m: np.zeros((n_clusters, frames_per_cluster), dtype=bool) for m in methods
+        }
+        loose: dict[str, np.ndarray] = {
+            m: np.zeros((n_clusters, frames_per_cluster), dtype=bool) for m in BLIND_METHODS
+        }
+        strict: dict[str, np.ndarray] = {
+            m: np.zeros((n_clusters, frames_per_cluster), dtype=bool) for m in BLIND_METHODS
+        }
+        abs_sync: dict[str, np.ndarray] = {
+            m: np.zeros((n_clusters, frames_per_cluster, 3), dtype=float) for m in BLIND_METHODS
+        }
+        abs_error_mean: dict[str, np.ndarray] = {
+            m: np.zeros((n_clusters, frames_per_cluster), dtype=float) for m in methods
+        }
         cluster_index = 0
         for family_index, family in enumerate(families):
             for channel_index in range(seeds_per_family):
@@ -447,7 +457,9 @@ def run_study(config: dict[str, Any] | None = None, *, write_outputs: bool = Fal
                                 "estimated_cfo_cycles_per_symbol": float(params[frame_index, 2]),
                                 "abs_timing_error_samples": float(abs_sync[method][cluster_index, frame_index, 0]),
                                 "abs_clock_error_ppm": float(abs_sync[method][cluster_index, frame_index, 1]),
-                                "abs_cfo_error_cycles_per_symbol": float(abs_sync[method][cluster_index, frame_index, 2]),
+                                "abs_cfo_error_cycles_per_symbol": float(
+                                    abs_sync[method][cluster_index, frame_index, 2]
+                                ),
                                 "sync_acquired_loose": bool(loose[method][cluster_index, frame_index]),
                                 "sync_acquired_strict": bool(strict[method][cluster_index, frame_index]),
                             })
@@ -466,8 +478,11 @@ def run_study(config: dict[str, Any] | None = None, *, write_outputs: bool = Fal
         for method_index, method in enumerate(methods):
             frame_outcomes = outcomes[method]
             cluster_pass = np.mean(frame_outcomes, axis=1)
-            pass_low, pass_high = _cluster_bootstrap(cluster_pass, int(cfg["bootstrap_seed"]) + condition_index * 100 + method_index,
-                                                     bootstrap_replicates)
+            pass_low, pass_high = _cluster_bootstrap(
+                cluster_pass,
+                int(cfg["bootstrap_seed"]) + condition_index * 100 + method_index,
+                bootstrap_replicates,
+            )
             frame_count = int(frame_outcomes.size)
             pass_count = int(np.count_nonzero(frame_outcomes))
             runtime = _runtime_summary(runtime_samples[(name, method)], runtime_frames[(name, method)])
@@ -541,13 +556,16 @@ def run_study(config: dict[str, Any] | None = None, *, write_outputs: bool = Fal
         "config_sha256": sha256_file(CONFIG_PATH),
         "source_sha256": json.loads(LOCK_PATH.read_text(encoding="utf-8"))["source_sha256"],
         "provenance": {
-            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "timestamp_utc": datetime.now(UTC).isoformat(),
             "git_commit": _git_commit(HERE.parent),
             "python": sys.version.split()[0], "numpy": np.__version__,
             "matplotlib": importlib.metadata.version("matplotlib"),
             "platform": platform.platform(), "processor": platform.processor() or "unknown",
             "cpu_count": os.cpu_count(), "peak_process_rss_mb": _rss_mb(),
-            "note": "v1/v7/v8 source snapshots are vendored unchanged under compat/; no network write or publication was performed.",
+            "note": (
+                "v1/v7/v8 source snapshots are vendored unchanged under compat/; "
+                "no network write or publication was performed."
+            ),
         },
         "protocol": cfg,
         "design": {
@@ -555,8 +573,14 @@ def run_study(config: dict[str, Any] | None = None, *, write_outputs: bool = Fal
             "independent_family_x_channel_seed_clusters": n_clusters,
             "frames_per_cluster": frames_per_cluster, "frames_per_condition": n_clusters * frames_per_cluster,
             "conditions": len(conditions), "receiver_methods": list(methods),
-            "pairing": "Each method in a condition received the same generated buffers; buffers are hashed in frame/cluster outputs.",
-            "uncertainty": "Percentile bootstrap over independent payload-family x channel-seed clusters; all replicate frames in a cluster are resampled together.",
+            "pairing": (
+                "Each method in a condition received the same generated buffers; "
+                "buffers are hashed in frame/cluster outputs."
+            ),
+            "uncertainty": (
+                "Percentile bootstrap over independent payload-family x channel-seed clusters; "
+                "all replicate frames in a cluster are resampled together."
+            ),
             "peak_process_rss_mb": _rss_mb(),
         },
         "seed_catalog": seed_catalog,
@@ -597,18 +621,42 @@ def _render_report(result: dict[str, Any]) -> str:
     lines = [
         "# Digital-to-Wave v9 — local generalization study",
         "",
-        "> **Status:** local, unpublished, synthetic and dimensionless software study. No quantum, diamond, biological, hardware, or physical-channel claim is made.",
+        (
+            "> **Status:** local, unpublished, synthetic and dimensionless software study. "
+            "No quantum, diamond, biological, hardware, or physical-channel claim is made."
+        ),
         "",
         "## Frozen design and provenance",
         "",
         f"- Frozen protocol lock SHA-256: `{result['protocol_lock_sha256']}`",
         f"- Source commit snapshot: `{result['provenance']['git_commit']}`",
-        f"- Runtime: Python {result['provenance']['python']}, NumPy {result['provenance']['numpy']}, Matplotlib {result['provenance']['matplotlib']} (recorded rather than silently substituting the repository pins).",
-        f"- Payload families: {result['design']['payload_families']}; independent family × channel-seed clusters: {result['design']['independent_family_x_channel_seed_clusters']}; frames per cluster: {result['design']['frames_per_cluster']}",
-        f"- {result['design']['frames_per_condition']} paired frames per condition; {result['design']['conditions']} conditions; pass iff max absolute error across 32 values ≤ {result['protocol']['pass_tolerance_max_abs']}",
-        "- Confidence intervals are 95% percentile cluster-bootstrap intervals over independent payload-family × channel-seed units; replicate frames remain together. They are not frame-only intervals.",
-        "- Every receiver arm saw the same buffer within each condition/cluster/frame; SHA-256 hashes are in `buffer-hashes.csv`.",
-        "- Full v8 versus v7 is a bundled comparison. Score-only, refinement-only and decoder-only arms change one component at a time relative to v7; do not ascribe the bundled v8 difference to one component.",
+        (
+            f"- Runtime: Python {result['provenance']['python']}, NumPy {result['provenance']['numpy']}, "
+            f"Matplotlib {result['provenance']['matplotlib']} "
+            "(recorded rather than silently substituting the repository pins)."
+        ),
+        (
+            f"- Payload families: {result['design']['payload_families']}; independent family × channel-seed clusters: "
+            f"{result['design']['independent_family_x_channel_seed_clusters']}; "
+            f"frames per cluster: {result['design']['frames_per_cluster']}"
+        ),
+        (
+            f"- {result['design']['frames_per_condition']} paired frames per condition; "
+            f"{result['design']['conditions']} conditions; pass iff max absolute error across 32 values "
+            f"≤ {result['protocol']['pass_tolerance_max_abs']}"
+        ),
+        (
+            "- Confidence intervals are 95% percentile cluster-bootstrap intervals over independent "
+            "payload-family × channel-seed units; replicate frames remain together. They are not frame-only intervals."
+        ),
+        (
+            "- Every receiver arm saw the same buffer within each condition/cluster/frame; "
+            "SHA-256 hashes are in `buffer-hashes.csv`."
+        ),
+        (
+            "- Full v8 versus v7 is a bundled comparison. Score-only, refinement-only and decoder-only arms "
+            "change one component at a time relative to v7; do not ascribe the bundled v8 difference to one component."
+        ),
         "",
         "## Exact-frame pass results",
         "",
@@ -618,28 +666,57 @@ def _render_report(result: dict[str, Any]) -> str:
         "|---|---|---:|---:|",
     ]
     for row in summaries:
-        lines.append(f"| {row['condition']} | `{row['method']}` | {row['frames_passing']}/{row['frames']} | {row['frame_pass_share']:.3f} ({row['cluster_bootstrap95_low']:.3f}–{row['cluster_bootstrap95_high']:.3f}) |")
+        lines.append(
+            f"| {row['condition']} | `{row['method']}` | {row['frames_passing']}/{row['frames']} | "
+            f"{row['frame_pass_share']:.3f} ("
+            f"{row['cluster_bootstrap95_low']:.3f}–{row['cluster_bootstrap95_high']:.3f}) |"
+        )
     lines += [
         "",
         "## Synchronization/acquisition and error",
         "",
-        "Blind receiver errors are relative to the frozen static or mean trajectory coordinates in the condition definition. For time-varying conditions, center-coordinate acquisition is not a measure of tracking error across the entire trajectory. The informed raw-LS arm has no acquisition estimate; it is supplied the declared static/mean reference parameters.",
+        (
+            "Blind receiver errors are relative to the frozen static or mean trajectory "
+            "coordinates in the condition definition. For time-varying conditions, "
+            "center-coordinate acquisition is not a measure of tracking error across "
+            "the entire trajectory. The informed raw-LS arm has no acquisition estimate; "
+            "it is supplied the declared static/mean reference parameters."
+        ),
         "",
-        "| Condition | Blind receiver | Loose joint acquisition | Strict joint acquisition | Mean abs timing error (samples) | Mean abs clock error (ppm) | Mean abs CFO error (cycles/symbol) |",
+        (
+            "| Condition | Blind receiver | Loose joint acquisition | Strict joint acquisition | "
+            "Mean abs timing error (samples) | Mean abs clock error (ppm) | "
+            "Mean abs CFO error (cycles/symbol) |"
+        ),
         "|---|---|---:|---:|---:|---:|---:|",
     ]
     for row in summaries:
         if row["method"] in BLIND_METHODS:
-            lines.append(f"| {row['condition']} | `{row['method']}` | {row['sync_acquired_loose_frames']}/{row['frames']} ({row['sync_acquired_loose_share']:.3f}) | {row['sync_acquired_strict_frames']}/{row['frames']} ({row['sync_acquired_strict_share']:.3f}) | {row['mean_abs_timing_error_samples']:.4g} | {row['mean_abs_clock_error_ppm']:.4g} | {row['mean_abs_cfo_error_cycles_per_symbol']:.4g} |")
+            lines.append(
+                f"| {row['condition']} | `{row['method']}` | "
+                f"{row['sync_acquired_loose_frames']}/{row['frames']} ({row['sync_acquired_loose_share']:.3f}) | "
+                f"{row['sync_acquired_strict_frames']}/{row['frames']} ({row['sync_acquired_strict_share']:.3f}) | "
+                f"{row['mean_abs_timing_error_samples']:.4g} | {row['mean_abs_clock_error_ppm']:.4g} | "
+                f"{row['mean_abs_cfo_error_cycles_per_symbol']:.4g} |"
+            )
     lines += [
         "",
-        "Acquisition CIs are cluster-bootstrap intervals and are available in `condition-summary.csv`/`results.json` for each blind arm.",
+        (
+            "Acquisition CIs are cluster-bootstrap intervals and are available in "
+            "`condition-summary.csv`/`results.json` for each blind arm."
+        ),
         "",
         "## One-change ablations and paired contrasts",
         "",
-        "Each contrast below is a paired pass-share difference over the same buffers, with a cluster-bootstrap 95% CI. A CI including zero does not establish a difference.",
+        (
+            "Each contrast below is a paired pass-share difference over the same buffers, with a cluster-bootstrap "
+            "95% CI. A CI including zero does not establish a difference."
+        ),
         "",
-        "| Condition | A − B | Paired pass-share difference | Cluster-bootstrap 95% CI | A-only / B-only frame passes |",
+        (
+            "| Condition | A − B | Paired pass-share difference | Cluster-bootstrap 95% CI | "
+            "A-only / B-only frame passes |"
+        ),
         "|---|---|---:|---:|---:|",
     ]
     key_pairs = {("score_only_ablation", "v7_blind"), ("refinement_only_ablation", "v7_blind"),
@@ -647,31 +724,67 @@ def _render_report(result: dict[str, Any]) -> str:
                  ("v8_full", "raw_ls_informed_oracle")}
     for row in result["paired_comparisons"]:
         if (row["method_a"], row["method_b"]) in key_pairs:
-            lines.append(f"| {row['condition']} | `{row['method_a']}` − `{row['method_b']}` | {row['paired_pass_share_difference_a_minus_b']:+.3f} | {row['cluster_bootstrap95_low']:+.3f}–{row['cluster_bootstrap95_high']:+.3f} | {row['a_pass_b_fail_frames']} / {row['a_fail_b_pass_frames']} |")
+            lines.append(
+                f"| {row['condition']} | `{row['method_a']}` − `{row['method_b']}` | "
+                f"{row['paired_pass_share_difference_a_minus_b']:+.3f} | "
+                f"{row['cluster_bootstrap95_low']:+.3f}–{row['cluster_bootstrap95_high']:+.3f} | "
+                f"{row['a_pass_b_fail_frames']} / {row['a_fail_b_pass_frames']} |"
+            )
     lines += [
         "",
         "## Runtime and memory",
         "",
-        f"Peak resident set size for the complete study process: **{result['provenance']['peak_process_rss_mb']:.1f} MB** (Linux `ru_maxrss`; process-wide peak, not method-attributed). Method runtime is cumulative wall-clock time; per-frame runtime divides by scored frames. Per-call p50/p95 and condition-by-method values are in `condition-summary.csv`.",
+        (
+            f"Peak resident set size for the complete study process: "
+            f"**{result['provenance']['peak_process_rss_mb']:.1f} MB** "
+            "(Linux `ru_maxrss`; process-wide peak, not method-attributed). "
+            "Method runtime is cumulative wall-clock time; "
+            "per-frame runtime divides by scored frames. Per-call p50/p95 and "
+            "condition-by-method values are in `condition-summary.csv`."
+        ),
         "",
         "| Condition | Receiver | Total runtime (s) | Mean runtime (ms/frame) | Call p50 / p95 (ms) |",
         "|---|---|---:|---:|---:|",
     ]
     for row in summaries:
-        lines.append(f"| {row['condition']} | `{row['method']}` | {row['runtime_total_seconds']:.4f} | {row['runtime_mean_ms_per_frame']:.4f} | {row['runtime_call_p50_ms']:.3f} / {row['runtime_call_p95_ms']:.3f} |")
+        lines.append(
+            f"| {row['condition']} | `{row['method']}` | {row['runtime_total_seconds']:.4f} | "
+            f"{row['runtime_mean_ms_per_frame']:.4f} | "
+            f"{row['runtime_call_p50_ms']:.3f} / {row['runtime_call_p95_ms']:.3f} |"
+        )
     lines += [
         "",
         "## Interpretation and scope limits",
         "",
-        "- This is a generated-data software stress test of the specified signed-amplitude sine signal and fixed receiver assumptions. It is not measurement, hardware testing, or validation of any physical system or preprint.",
-        "- Filtering, colored noise, impulses, fractional timing, time-varying CFO/clock and compound channel behavior are deliberately synthetic and dimensionless; the design does not imply realistic channel distributions.",
-        "- The raw-LS informed reference knows the static or mean timing/clock/CFO coordinates but uses the existing static raw-fit decoder. It is not a true upper bound for filtering or time-varying channels and has no equalizer/tracker for those effects.",
-        "- Results generalize only over the prespecified synthetic payload-family distributions, random seeds and finite conditions here. They do not establish performance outside the study grid.",
+        (
+            "- This is a generated-data software stress test of the specified signed-amplitude sine "
+            "signal and fixed receiver assumptions. It is not measurement, hardware testing, "
+            "or validation of any physical system or preprint."
+        ),
+        (
+            "- Filtering, colored noise, impulses, fractional timing, time-varying CFO/clock "
+            "and compound channel behavior are deliberately synthetic and dimensionless; "
+            "the design does not imply realistic channel distributions."
+        ),
+        (
+            "- The raw-LS informed reference knows the static or mean timing/clock/CFO coordinates "
+            "but uses the existing static raw-fit decoder. It is not a true upper bound for "
+            "filtering or time-varying channels and has no equalizer/tracker for those effects."
+        ),
+        (
+            "- Results generalize only over the prespecified synthetic payload-family distributions, "
+            "random seeds and finite conditions here. They do not establish performance "
+            "outside the study grid."
+        ),
         "- Nothing was committed, pushed, published, or uploaded. The bundle is for local review only.",
         "",
         "## Reproduction",
         "",
-        "Run from this directory with `python study.py --run`. The script verifies `lock.json` against the frozen source/configuration SHA-256 values before executing. `python -m pytest -q` runs reduced deterministic tests and does not consume the full-run seeds.",
+        (
+            "Run from this directory with `python study.py --run`. The script verifies `lock.json` "
+            "against the frozen source/configuration SHA-256 values before executing. "
+            "`python -m pytest -q` runs reduced deterministic tests and does not consume the full-run seeds."
+        ),
         "",
     ]
     return "\n".join(lines)
@@ -721,13 +834,20 @@ def write_result_bundle(result: dict[str, Any]) -> None:
     for path in sorted(RESULTS_DIR.iterdir()):
         if path.is_file() and path.name != "SHA256SUMS":
             file_hashes[path.name] = sha256_file(path)
-    (RESULTS_DIR / "SHA256SUMS").write_text("".join(f"{value}  {name}\n" for name, value in file_hashes.items()), encoding="utf-8")
+    (RESULTS_DIR / "SHA256SUMS").write_text(
+        "".join(f"{value}  {name}\n" for name, value in file_hashes.items()),
+        encoding="utf-8",
+    )
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run", action="store_true", help="run the frozen full protocol and write local outputs")
-    parser.add_argument("--verify-lock", action="store_true", help="verify the source/config SHA-256 lock without running")
+    parser.add_argument(
+        "--verify-lock",
+        action="store_true",
+        help="verify the source/config SHA-256 lock without running",
+    )
     args = parser.parse_args()
     lock = verify_lock()
     if args.verify_lock and not args.run:
