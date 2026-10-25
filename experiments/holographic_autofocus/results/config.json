@@ -1,0 +1,135 @@
+{
+  "scope": "SYNTHETIC classical scalar holographic autofocus, independent of encoding benchmarks",
+  "seed": 42,
+  "rng": "numpy.random.default_rng; one stream; 200 then 2000; Poisson then Gaussian",
+  "trials_per_level": 40,
+  "total_trials": 80,
+  "tolerance_mm": 0.25,
+  "grid": {
+    "n": 96,
+    "shape": [
+      96,
+      96
+    ],
+    "real_dtype": "float64",
+    "complex_dtype": "complex128"
+  },
+  "object": {
+    "coordinates": "X=x-(n-1)/2; Y=y-(n-1)/2, in pixels",
+    "amplitude": "exp(-((X+12)^2+(Y+8)^2)/32)+0.7*exp(-((X-11)^2+(Y-10)^2)/50)",
+    "gaussians": [
+      {
+        "center_xy_pixels": [
+          -12,
+          -8
+        ],
+        "amplitude": 1.0,
+        "exponent_denominator_pixels2": 32
+      },
+      {
+        "center_xy_pixels": [
+          11,
+          10
+        ],
+        "amplitude": 0.7,
+        "exponent_denominator_pixels2": 50
+      }
+    ],
+    "initial_phase_rad": 0.0
+  },
+  "wavelength_m": 5.32e-07,
+  "pixel_pitch_m": 6.5e-06,
+  "recording_distance_m": 0.004,
+  "known_reconstruction_distance_m": -0.004,
+  "reference": {
+    "carrier_bins_xy": [
+      24,
+      0
+    ],
+    "carrier_cycles_per_pixel_xy": [
+      0.25,
+      0.0
+    ],
+    "amplitude": 1.0,
+    "formula": "exp(2j*pi*24*X/n)"
+  },
+  "filter": {
+    "sideband_center_bins_xy": [
+      -24,
+      0
+    ],
+    "outer_radius_bins": 9.0,
+    "inner_radius_bins": 6.75,
+    "transition": "raised cosine",
+    "carrier_removal": "multiply selected field by R"
+  },
+  "noise": {
+    "peak_expected_electrons": [
+      200,
+      2000
+    ],
+    "read_noise_electrons": 3.0,
+    "gain": "peak_expected_electrons/max(clean_hologram), fixed within each level",
+    "gain_electrons_per_intensity": {
+      "200": 65.67363696331893,
+      "2000": 656.7363696331893
+    },
+    "negative_offset_corrected_samples_allowed": true,
+    "per_trial_normalization": false,
+    "camera_parameters": "hypothetical, uncalibrated"
+  },
+  "focus": {
+    "metric": "mean(gx^2+gy^2)/mean(I^2); I=abs(field)^2; gy,gx=numpy.gradient(I)",
+    "objective": "maximize",
+    "coarse_range_m": [
+      -0.008,
+      0.0
+    ],
+    "coarse_samples": 65,
+    "coarse_step_m": 0.000125,
+    "refined_samples": 21,
+    "refined_step_m": 1.25e-05,
+    "refinement": "21 points between immediate neighbors of one coarse winner",
+    "endpoint_handling": "coarse endpoint: return unrefined; refined endpoint: flag; retain all trials",
+    "tie_break": "first maximum in ascending-distance order",
+    "ground_truth_used_for_selection": false
+  },
+  "propagation": {
+    "time_dependence": "exp(-i*omega*t)",
+    "transfer": "exp(+i*distance_m*kz)",
+    "kz": "2*pi*sqrt(1/wavelength_m^2-FX^2-FY^2)",
+    "positive_distance": "forward",
+    "negative_distance": "back-propagation",
+    "boundaries": "periodic FFT, no padding",
+    "pixel_pitch": "unchanged",
+    "evanescent_components": "removed (transfer=0)",
+    "zero_distance": "copy input"
+  },
+  "statistics": {
+    "standard_deviation_ddof": 1,
+    "percentiles": [
+      2.5,
+      97.5
+    ],
+    "percentile_method": "linear"
+  },
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "2.4.6"
+  },
+  "limitations": [
+    "One fixed synthetic two-Gaussian scene, not measured membrane data.",
+    "Periodic FFT propagation without padding permits wraparound.",
+    "Finite sampling, evanescent-component removal and chosen filter bandwidth.",
+    "An in-Nyquist mask does not guarantee complete spectral separation or eliminate leakage.",
+    "Hypothetical camera parameters, not calibrated measurements.",
+    "No clipping, saturation, quantization or fixed-pattern noise.",
+    "The intensity-gradient focus metric is not universal across object classes.",
+    "Local refinement follows only one winning coarse peak, not all competing peaks.",
+    "Numerical search spacing is not physical depth accuracy.",
+    "Empirical percentiles describe trial spread, not a confidence interval for true distance.",
+    "40/40 successes do not prove future 100% reliability.",
+    "Propagation round trips do not validate the entire reconstruction pipeline.",
+    "No physical, quantum, display, calibrated membrane or Digital to Wave preprint validation."
+  ]
+}
