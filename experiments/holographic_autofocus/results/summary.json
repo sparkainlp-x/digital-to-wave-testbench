@@ -1,0 +1,33 @@
+{
+  "noise_free": {
+    "estimated_distance_mm": -4.0,
+    "score": 0.08771226776995489,
+    "at_scan_edge": false
+  },
+  "levels": [
+    {
+      "peak_expected_electrons": 200,
+      "trial_count": 40,
+      "mean_estimated_distance_mm": -3.9862499999999996,
+      "sample_standard_deviation_mm": 0.2609431856819531,
+      "bias_mm": 0.013749999999999884,
+      "rmse_mm": 0.2580273725789574,
+      "within_tolerance_fraction": 0.7,
+      "search_edge_fraction": 0.0,
+      "estimated_distance_percentile_2_5_mm": -4.3790625,
+      "estimated_distance_percentile_97_5_mm": -3.6146875
+    },
+    {
+      "peak_expected_electrons": 2000,
+      "trial_count": 40,
+      "mean_estimated_distance_mm": -3.984375,
+      "sample_standard_deviation_mm": 0.08285519883724253,
+      "bias_mm": 0.0156249999999999,
+      "rmse_mm": 0.08329165624478851,
+      "within_tolerance_fraction": 1.0,
+      "search_edge_fraction": 0.0,
+      "estimated_distance_percentile_2_5_mm": -4.1378125,
+      "estimated_distance_percentile_97_5_mm": -3.8371874999999998
+    }
+  ]
+}
